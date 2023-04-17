@@ -13,7 +13,7 @@ const PrivateRoute = ({ children, route }) => {
   if (route) {
     let action = null
     let resource = null
-    let restrictedRoute = false
+    let restrictedRoute = true
 
     if (route.meta) {
       action = route.meta.action
@@ -26,12 +26,12 @@ const PrivateRoute = ({ children, route }) => {
     if (user && restrictedRoute) {
       return <Navigate to='/' />
     }
-    if (user && restrictedRoute && user.role === 'client') {
+    if (user && restrictedRoute && user.managing_level === 'Purchasing-and-Sales-manager') {
       return <Navigate to='/access-control' />
     }
-    if (user && !ability.can(action || 'read', resource)) {
-      return <Navigate to='/misc/not-authorized' replace />
-    }
+    // if (user && !ability.can(action || 'read', resource)) {
+    //   return <Navigate to='/misc/not-authorized' replace />
+    // }
   }
 
   return <Suspense fallback={null}>{children}</Suspense>

@@ -1,10 +1,11 @@
 // ** React Imports
 import { useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import client from 'axios'
 
 // ** Custom Hooks
 import { useSkin } from '@hooks/useSkin'
-import useJwt from '@src/auth/jwt/useJwt'
+// import useJwt from '@src/auth/jwt/useJwt'
 
 // ** Third Party Components
 import toast from 'react-hot-toast'
@@ -25,13 +26,15 @@ import InputPasswordToggle from '@components/input-password-toggle'
 // ** Utils
 import { getHomeRouteForLoggedInUser } from '@utils'
 
-// ** Reactstrap Imports
+// ** Reactstrap Importsx
 import { Row, Col, Form, Input, Label, Alert, Button, CardText, CardTitle, UncontrolledTooltip } from 'reactstrap'
 
 // ** Styles
 import '@styles/react/pages/page-authentication.scss'
 
+
 const ToastContent = ({ t, name, role }) => {
+
   return (
     <div className='d-flex'>
       <div className='me-1'>
@@ -42,7 +45,7 @@ const ToastContent = ({ t, name, role }) => {
           <h6>{name}</h6>
           <X size={12} className='cursor-pointer' onClick={() => toast.dismiss(t.id)} />
         </div>
-        <span>You have successfully logged in as an {role} user to Vuexy. Now you can start to explore. Enjoy!</span>
+        <span> تم تسجيل الدخول بنجاح ك {role} </span>
       </div>
     </div>
   )
@@ -70,28 +73,29 @@ const Login = () => {
   const illustration = skin === 'dark' ? 'login-v2-dark.svg' : 'login-v2.svg',
     source = require(`@src/assets/images/pages/${illustration}`).default
 
-  const onSubmit = data => {
-    if (Object.values(data).every(field => field.length > 0)) {
-      useJwt
-        .login({ email: data.loginEmail, password: data.password })
-        .then(res => {
-          const data = { ...res.data.userData, accessToken: res.data.accessToken, refreshToken: res.data.refreshToken }
-          dispatch(handleLogin(data))
-          ability.update(res.data.userData.ability)
-          navigate(getHomeRouteForLoggedInUser(data.role))
-          toast(t => (
-            <ToastContent t={t} role={data.role || 'admin'} name={data.fullName || data.username || 'John Doe'} />
-          ))
-        })
-        .catch(err => console.log(err))
-    } else {
-      for (const key in data) {
-        if (data[key].length === 0) {
-          setError(key, {
-            type: 'manual'
-          })
+  const onSubmit = async data => {
+    try {
+
+      const  res = await client.post('http://127.0.0.1:8000/api/login', {username: data.loginEmail, password: data.password
+         })
+      // console.log(res.data.token)
+      console.log(res);
+      console.log(res.data.username);
+      dispatch(handleLogin(res.data))
+      // resetFormFields()
+      //  localStorage.setItem("token", res.data.user.token)
+      const  ability1= [
+        {
+          action: 'manage',
+          subject: 'ceo'  
         }
-      }
+      ]
+       ability.update(ability1)
+       navigate(getHomeRouteForLoggedInUser(res.data.managing_level))
+       
+      // {res.data.username && navigate('/')}
+    } catch (error) {
+     console.log(error)
     }
   }
 
@@ -147,7 +151,7 @@ const Login = () => {
               </g>
             </g>
           </svg>
-          <h2 className='brand-text text-primary ms-1'>Vuexy</h2>
+          <h2 className='brand-text text-primary ms-1'>المصري</h2>
         </Link>
         <Col className='d-none d-lg-flex align-items-center p-5' lg='8' sm='12'>
           <div className='w-100 d-lg-flex align-items-center justify-content-center px-5'>
@@ -186,7 +190,7 @@ const Login = () => {
             <Form className='auth-login-form mt-2' onSubmit={handleSubmit(onSubmit)}>
               <div className='mb-1'>
                 <Label className='form-label' for='login-email'>
-                  Email
+                  اسم المستخدم
                 </Label>
                 <Controller
                   id='loginEmail'
@@ -195,7 +199,7 @@ const Login = () => {
                   render={({ field }) => (
                     <Input
                       autoFocus
-                      type='email'
+                      type='text'
                       placeholder='john@example.com'
                       invalid={errors.loginEmail && true}
                       {...field}
@@ -206,7 +210,7 @@ const Login = () => {
               <div className='mb-1'>
                 <div className='d-flex justify-content-between'>
                   <Label className='form-label' for='login-password'>
-                    Password
+                    كلمة السر
                   </Label>
                   <Link to='/forgot-password'>
                     <small>Forgot Password?</small>
@@ -221,14 +225,14 @@ const Login = () => {
                   )}
                 />
               </div>
-              <div className='form-check mb-1'>
+              {/* <div className='form-check mb-1'>
                 <Input type='checkbox' id='remember-me' />
                 <Label className='form-check-label' for='remember-me'>
                   Remember Me
                 </Label>
-              </div>
+              </div> */}
               <Button type='submit' color='primary' block>
-                sss
+                تسجيل الدخول
               </Button>
             </Form>
             <p className='text-center mt-2'>
@@ -237,23 +241,7 @@ const Login = () => {
                 <span>Create an account</span>
               </Link>
             </p>
-            <div className='divider my-2'>
-              <div className='divider-text'>or</div>
-            </div>
-            <div className='auth-footer-btn d-flex justify-content-center'>
-              <Button color='facebook'>
-                <Facebook size={14} />
-              </Button>
-              <Button color='twitter'>
-                <Twitter size={14} />
-              </Button>
-              <Button color='google'>
-                <Mail size={14} />
-              </Button>
-              <Button className='me-0' color='github'>
-                <GitHub size={14} />
-              </Button>
-            </div>
+
           </Col>
         </Col>
       </Row>

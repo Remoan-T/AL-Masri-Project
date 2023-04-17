@@ -24,6 +24,8 @@ export default [
             id: 'secondLevel',
             title: 'Second Level 2.1',
             icon: <Circle />,
+            action: 'manage',
+            resource: 'ceo',
             navLink: '#'
           },
           {
@@ -51,6 +53,8 @@ export default [
         id: 'disabledMenu',
         title: 'Disabled Menu',
         icon: <EyeOff />,
+        action: 'manage',
+        resource: 'ceo',
         navLink: '#',
         disabled: true
       },

@@ -28,7 +28,11 @@ const ExtensionsRoutes = [
   },
   {
     element: <ReactHotToast />,
-    path: '/extensions/react-hot-toasts'
+    path: '/extensions/react-hot-toasts',
+    meta: {
+      action: 'read',
+      resource: 'ACL'
+    }
   },
   {
     element: <Sliders />,
