@@ -3,7 +3,7 @@
 //Template config options
 const themeConfig = {
   app: {
-    appName: 'Almasri chicken',
+    appName: 'المصري للدواجن',
     appLogoImage: require('@src/assets/images/logo/logo.svg').default
   },
   layout: {

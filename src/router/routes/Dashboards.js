@@ -14,7 +14,11 @@ const DashboardRoutes = [
   },
   {
     path: '/dashboard/ecommerce',
-    element: <DashboardEcommerce />
+    element: <DashboardEcommerce />,
+    meta: {
+      action: 'manage',
+      resource: 'ceo'
+    }
   }
 ]
 

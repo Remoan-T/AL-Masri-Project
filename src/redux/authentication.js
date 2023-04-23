@@ -24,11 +24,12 @@ export const authSlice = createSlice({
       // state[config.storageTokenKeyName] = action.payload[config.storageTokenKeyName]
       // state[config.storageRefreshTokenKeyName] = action.payload[config.storageRefreshTokenKeyName]
     //  localStorage.setItem(action,"manage")
-    //  localStorage.setItem(action,"manage")
+     localStorage.setItem('action',"manage")
 
       localStorage.setItem('userData', JSON.stringify(action.payload))
-      localStorage.setItem('accessToken', JSON.stringify(action.payload.token))
-      localStorage.setItem('managing_level', JSON.stringify(action.payload.managing_level))
+      localStorage.setItem('accessToken',(action.payload.token))
+      localStorage.setItem('managing_level',(action.payload.managing_level))
+      // localStorage.setItem('managing_level', JSON.stringify(action.payload.managing_level))
       // localStorage.setItem(config.storageRefreshTokenKeyName, JSON.stringify(action.payload.refreshToken))
       
     },

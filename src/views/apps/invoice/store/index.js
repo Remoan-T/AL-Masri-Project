@@ -4,14 +4,22 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 // ** Axios Imports
 import axios from 'axios'
 
-export const getData = createAsyncThunk('appInvoice/getData', async params => {
-  const response = await axios.get('/apps/invoice/invoices', params)
+export const getData = createAsyncThunk('appInvoice/getData', async () => {
+  const response = await axios.get('http://127.0.0.1:8000/sales-api/get-purchase-offer',{
+    headers:{
+      Accept:'application/json',
+      Authorization:`Bearer ${ localStorage.getItem(accessToken) }`
+   }
+  })
+  const data = response.data
+  console.log()
   return {
     params,
-    data: response.data.invoices,
-    allData: response.data.allData,
-    totalPages: response.data.total
+    data: response.data,
+    allData: response.data,
+    totalPages: 15
   }
+  
 })
 
 export const deleteInvoice = createAsyncThunk('appInvoice/deleteInvoice', async (id, { dispatch, getState }) => {
@@ -31,6 +39,7 @@ export const appInvoiceSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder.addCase(getData.fulfilled, (state, action) => {
+      console.log(state)
       state.data = action.payload.data
       state.allData = action.payload.allData
       state.total = action.payload.totalPages

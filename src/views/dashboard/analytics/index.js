@@ -1,5 +1,6 @@
 // ** React Imports
 import { useContext } from 'react'
+import DataTablesBasic from '../../tables/data-tables/basic/TableZeroConfig'
 
 // ** Icons Imports
 import { List } from 'react-feather'
@@ -19,6 +20,7 @@ import { ThemeColors } from '@src/utility/context/ThemeColors'
 import { Row, Col, Card, CardHeader, CardTitle, CardBody } from 'reactstrap'
 
 // ** Demo Components
+import TableBasic from '../../tables/reactstrap/TableBasic'
 import InvoiceList from '@src/views/apps/invoice/list'
 import Sales from '@src/views/ui-elements/cards/analytics/Sales'
 import AvgSessions from '@src/views/ui-elements/cards/analytics/AvgSessions'
@@ -167,7 +169,10 @@ const AnalyticsDashboard = () => {
       </Row>
       <Row className='match-height'>
         <Col xs='12'>
-          <InvoiceList />
+          {/* <DataTablesBasic/> */}
+          {/* <TableBasic/> */}
+          <DataTablesBasic/>
+
         </Col>
       </Row>
     </div>

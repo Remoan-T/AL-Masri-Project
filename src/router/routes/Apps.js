@@ -166,15 +166,27 @@ const AppRoutes = [
   },
   {
     element: <UserList />,
-    path: '/apps/user/list'
+    path: '/apps/user/list',
+    meta: {
+      appLayout: true,
+      className: 'kanban-application'
+    }
   },
   {
     path: '/apps/user/view',
-    element: <Navigate to='/apps/user/view/1' />
+    element: <Navigate to='/apps/user/view/1' />,
+    meta: {
+      appLayout: true,
+      className: 'kanban-application'
+    }
   },
   {
     element: <UserView />,
-    path: '/apps/user/view/:id'
+    path: '/apps/user/view/:id',
+    meta: {
+      appLayout: true,
+      className: 'kanban-application'
+    }
   },
   {
     element: <Roles />,

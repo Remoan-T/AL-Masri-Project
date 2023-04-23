@@ -89,7 +89,6 @@ const DataTableServerSide = () => {
         activeClassName='active'
         forcePage={currentPage !== 0 ? currentPage - 1 : 0}
         onPageChange={page => handlePagination(page)}
-        activeClassName='active'
         pageClassName='page-item'
         breakClassName='page-item'
         nextLinkClassName='page-link'

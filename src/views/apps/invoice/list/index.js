@@ -86,8 +86,9 @@ const InvoiceList = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [statusValue, setStatusValue] = useState('')
   const [rowsPerPage, setRowsPerPage] = useState(10)
-
+  console.log(store)
   useEffect(() => {
+    
     dispatch(
       getData({
         sort,

@@ -1,5 +1,6 @@
 // ** Custom Components
 import Avatar from '@components/avatar'
+import { useEffect } from 'react'
 
 // ** Third Party Components
 import axios from 'axios'
@@ -19,12 +20,34 @@ const status = {
   5: { title: 'Applied', color: 'light-info' }
 }
 
-export let data
 
-// ** Get initial Data
-axios.get('/api/datatables/initial-data').then(response => {
-  data = response.data
+
+
+export let data
+try
+{
+axios.get('http://127.0.0.1:8000/sales-api/get-purchase-offer',{
+  headers:{
+    Accept:'application/json',
+    Authorization:`Bearer ${ localStorage.accessToken }`
+ }
+}).then(response => {
+ const data = response.data
+  console.log(data)
+
+
 })
+}
+catch(error)
+{
+  console.log(error)
+}
+
+console.log(data)
+// ** Get initial Data
+// axios.get('/api/datatables/initial-data').then(response => {
+//   data = response.data
+// })
 
 // ** Table Zero Config Column
 export const basicColumns = [
@@ -32,38 +55,38 @@ export const basicColumns = [
     name: 'ID',
     sortable: true,
     maxWidth: '100px',
-    selector: row => row.id
+    selector: row => row.id,
   },
   {
     name: 'Name',
     sortable: true,
     minWidth: '225px',
-    selector: row => row.full_name
+    selector: row => row.id
   },
-  {
-    name: 'Email',
-    sortable: true,
-    minWidth: '310px',
-    selector: row => row.email
-  },
-  {
-    name: 'Position',
-    sortable: true,
-    minWidth: '250px',
-    selector: row => row.post
-  },
-  {
-    name: 'Age',
-    sortable: true,
-    minWidth: '100px',
-    selector: row => row.age
-  },
-  {
-    name: 'Salary',
-    sortable: true,
-    minWidth: '175px',
-    selector: row => row.salary
-  }
+  // // {
+  //   name: 'Email',
+  //   sortable: true,
+  //   minWidth: '310px',
+  //   selector: row => row.email
+  // },
+  // {
+  //   name: 'Position',
+  //   sortable: true,
+  //   minWidth: '250px',
+  //   selector: row => row.post
+  // },
+  // {
+  //   name: 'Age',
+  //   sortable: true,
+  //   minWidth: '100px',
+  //   selector: row => row.age
+  // },
+  // {
+  //   name: 'Salary',
+  //   sortable: true,
+  //   minWidth: '175px',
+  //   selector: row => row.salary
+  // }
 ]
 // ** Table ReOrder Column
 export const reOrderColumns = [
