@@ -1,28 +1,34 @@
 // ** React Import
 import { useState } from 'react'
-import axios from 'axios'
+
 // ** Custom Components
 import Sidebar from '@components/sidebar'
 
 // ** Utils
 import { selectThemeColors } from '@utils'
+import axios from 'axios'
 
 // ** Third Party Components
 import Select from 'react-select'
 import classnames from 'classnames'
 import { useForm, Controller } from 'react-hook-form'
+import TextareaFloatingLabel from '../../../forms/form-elements/textarea/TextareaFloatingLabel'
+import { Card, CardHeader, CardTitle, CardBody, CardText, Input, Label,Button ,FormText,Form} from 'reactstrap'
 
 // ** Reactstrap Imports
-import { Button, Label, FormText, Form, Input } from 'reactstrap'
+// import { Button, Label, FormText, Form, Input } from 'reactstrap'
 
 // ** Store & Actions
 import { addUser } from '../store'
 import { useDispatch } from 'react-redux'
-import { error } from 'jquery'
 
 const defaultValues = {
-  amount: '',
- 
+  email: '',
+  contact: '',
+  company: '',
+  fullName: '',
+  username: '',
+  country: null
 }
 
 const countryOptions = [
@@ -58,78 +64,43 @@ const checkIsValid = data => {
 
 const SidebarNewUsers = ({ open, toggleSidebar }) => {
   // ** States
-  // const [data, setData] = useState(null)
-  // const [plan, setPlan] = useState('basic')
-  // const [role, setRole] = useState('subscriber')
-
-
-  // ** Store Vars
-  const dispatch = useDispatch()
-
-  // ** Vars
   const [data, setData] = useState(null)
   const [plan, setPlan] = useState('basic')
   const [role, setRole] = useState('subscriber')
+  
+
+  // ** Store Vars
+  
+
+  // ** Vars
   const {
     control,
     setValue,
-    setError,
+
     handleSubmit,
     formState: { errors }
   } = useForm({ defaultValues })
 
-
-  
   // ** Function to handle form submit
-  const onSubmit = async () => {
-
-try{
-  const res = await axios.post('http://127.0.0.1:8000/sales-api/add-requset-sales-purchasing',{
-    headers:{
-      Accept:'application/json',
-      Authorization: `Bearer ${localStorage.accessToken}`
+  const onSubmit = async (data) => {
+    
+    try{
+      const res = await axios.post('http://127.0.0.1:8000/sales-api/add-note',{
+        detail:data.note
+      },{
+        headers:{
+          Accept:'application/json',
+          Authorization: `Bearer ${localStorage.accessToken}`
+        }
+      })
+      console.log(res)
+    
+    }catch(error){
+      console.log(error)
+    
     }
-  })
-  console.log(res)
-
-}catch(error){
-  console.log(error)
-
-}
-
-
-    // setData(data)
-    // if (checkIsValid(data)) {
-    //   toggleSidebar()
-    //   dispatch(
-    //     addUser({
-    //       role,
-    //       avatar: '',
-    //       status: 'active',
-    //       email: data.email,
-    //       currentPlan: plan,
-    //       billing: 'auto debit',
-    //       company: data.company,
-    //       contact: data.contact,
-    //       fullName: data.fullName,
-    //       username: data.username,
-    //       country: data.country.value
-    //     })
-    //   )
-    // } else {
-    //   for (const key in data) {
-    //     if (data[key] === null) {
-    //       setError('country', {
-    //         type: 'manual'
-    //       })
-    //     }
-    //     if (data[key] !== null && data[key].length === 0) {
-    //       setError(key, {
-    //         type: 'manual'
-    //       })
-    //     }
-    //   }
-    // }
+    
+    
   }
 
   const handleSidebarClosed = () => {
@@ -151,121 +122,49 @@ try{
       onClosed={handleSidebarClosed}
     >
       <Form onSubmit={handleSubmit(onSubmit)}>
-        {/* <div className='mb-1'>
-          <Label className='form-label' for='fullName'>
-            Full Name <span className='text-danger'>*</span>
-          </Label>
-          <Controller
-            name='fullName'
-            control={control}
-            render={({ field }) => (
-              <Input id='fullName' placeholder='John Doe' invalid={errors.fullName && true} {...field} />
-            )}
-          />
-        </div>
-        <div className='mb-1'>
-          <Label className='form-label' for='username'>
-            Username <span className='text-danger'>*</span>
-          </Label>
-          <Controller
-            name='username'
-            control={control}
-            render={({ field }) => (
-              <Input id='username' placeholder='johnDoe99'  {...field} />
-            )}
-          />
-        </div> */}
-                     <div className='mb-1'>
-                <Label className='form-label' for='login-email'>
-                  اسم المستخدم
-                </Label>
-                <Controller
-                  id='amount'
-                  name='amount'
+
+      <Card>
+      <CardHeader>
+        <CardTitle ><h2>إضافة ملاحظة</h2></CardTitle>
+      </CardHeader>
+
+      <CardBody>
+        <CardText className='mb-3'>
+          ادخل الملاحظة واضغط على إدخال...
+        </CardText>
+        <div className='form-floating mt-2'>
+        <Controller
+            name='note'
+            id='note'
                   control={control}
                   render={({ field }) => (
-                    <Input
-                      autoFocus
-                      type='text'
-                      invalid={errors.amount && true}
-                      {...field}
-                    />
-                  )}
-                />
-                </div>
+          <Input
+            type='textarea'
+            invalid={errors.loginEmail && true}
+            placeholder='ملاحظة'
+            style={{ minHeight: '100px' }}
+            {...field}
+          />)}
+          />
+          
+          <Label className='form-label' for='floating-textarea'>
+            ملاحظة
+          </Label>
+        </div>
+      </CardBody>
+    </Card>
 
-        {/* <div className='mb-1'>
-          <Label className='form-label' for='contact'>
-            Contact <span className='text-danger'>*</span>
-          </Label>
-          <Controller
-            name='contact'
-            control={control}
-            render={({ field }) => (
-              <Input id='contact' placeholder='(397) 294-5153' invalid={errors.contact && true} {...field} />
-            )}
-          />
-        </div> */}
-        {/* <div className='mb-1'>
-          <Label className='form-label' for='company'>
-            Company <span className='text-danger'>*</span>
-          </Label>
-          <Controller
-            name='company'
-            control={control}
-            render={({ field }) => (
-              <Input id='company' placeholder='Company Pvt Ltd' invalid={errors.company && true} {...field} />
-            )}
-          />
-        </div>
-        <div className='mb-1'>
-          <Label className='form-label' for='country'>
-            Country <span className='text-danger'>*</span>
-          </Label>
-          <Controller
-            name='country'
-            control={control}
-            render={({ field }) => (
-              // <Input id='country' placeholder='Australia' invalid={errors.country && true} {...field} />
-              <Select
-                isClearable={false}
-                classNamePrefix='select'
-                options={countryOptions}
-                theme={selectThemeColors}
-                className={classnames('react-select', { 'is-invalid': data !== null && data.country === null })}
-                {...field}
-              />
-            )}
-          />
-        </div>
-        <div className='mb-1'>
-          <Label className='form-label' for='user-role'>
-            User Role
-          </Label>
-          <Input type='select' id='user-role' name='user-role' value={role} onChange={e => setRole(e.target.value)}>
-            <option value='subscriber'>Subscriber</option>
-            <option value='editor'>Editor</option>
-            <option value='maintainer'>Maintainer</option>
-            <option value='author'>Author</option>
-            <option value='admin'>Admin</option>
-          </Input>
-        </div>
-        <div className='mb-1' value={plan} onChange={e => setPlan(e.target.value)}>
-          <Label className='form-label' for='select-plan'>
-            Select Plan
-          </Label>
-          <Input type='select' id='select-plan' name='select-plan'>
-            <option value='basic'>Basic</option>
-            <option value='enterprise'>Enterprise</option>
-            <option value='company'>Company</option>
-            <option value='team'>Team</option>
-          </Input>
-        </div> */}
+
+                
+              
+
+
+
         <Button type='submit' className='me-1' color='primary'>
-          Submit
+          إضافة
         </Button>
         <Button type='reset' color='secondary' outline onClick={toggleSidebar}>
-          Cancel
+          إالغاء
         </Button>
       </Form>
     </Sidebar>

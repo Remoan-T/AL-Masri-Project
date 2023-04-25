@@ -29,7 +29,7 @@ import SupportTracker from '@src/views/ui-elements/cards/analytics/SupportTracke
 import OrdersReceived from '@src/views/ui-elements/cards/statistics/OrdersReceived'
 import SubscribersGained from '@src/views/ui-elements/cards/statistics/SubscribersGained'
 import CardCongratulations from '@src/views/ui-elements/cards/advance/CardCongratulations'
-
+import MyForm from'./input.js'
 // ** Images
 import jsonImg from '@src/assets/images/icons/json.png'
 import ceo from '@src/assets/images/portrait/small/avatar-s-9.jpg'
@@ -171,7 +171,7 @@ const AnalyticsDashboard = () => {
         <Col xs='12'>
           {/* <DataTablesBasic/> */}
           {/* <TableBasic/> */}
-          <DataTablesBasic/>
+         <MyForm/>
 
         </Col>
       </Row>

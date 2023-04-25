@@ -12,7 +12,7 @@ import { useSkin } from '@hooks/useSkin'
 import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { useForm, Controller } from 'react-hook-form'
-import { Facebook, Twitter, Mail, GitHub, HelpCircle, Coffee, X } from 'react-feather'
+import { Facebook, Twitter, Mail, GitHub, HelpCircle, Coffee, X ,AlertOctagon} from 'react-feather'
 
 // ** Actions
 import { handleLogin } from '@store/authentication'
@@ -43,14 +43,36 @@ const ToastContent = ({ t, name, role }) => {
       </div>
       <div className='d-flex flex-column'>
         <div className='d-flex justify-content-between'>
-          <h6>{name}</h6>
+          <h6> مرحباً <b>{name} </b> </h6>
           <X size={12} className='cursor-pointer' onClick={() => toast.dismiss(t.id)} />
         </div>
-        <span> تم تسجيل الدخول بنجاح ك {role} </span>
+        <span> تم تسجيل الدخول بنجاح </span>
       </div>
     </div>
   )
 }
+
+
+
+const ToastError = ({ t, errName }) => {
+
+  return (
+    <div className='d-flex'>
+      <div className='me-1'>
+        <Avatar size='sm' color='danger' icon={<AlertOctagon size={10} />} />
+      </div>
+      <div className='d-flex flex-column text-danger'>
+        <div className='d-flex justify-content-between'>
+          {(errName =='ERR_NETWORK') &&<h4 className='text-danger'> <b>قاعدة البيانات غير متصلة !!</b> </h4>}
+          {(errName !='ERR_NETWORK') &&<h4 className='text-danger'><b>اسم المستخدم أو كلمة المرور خطأ !!</b></h4>}
+          <X size={12} className='cursor-pointer' onClick={() => toast.dismiss(t.id)} />
+        </div>
+      {/* sometext */}
+      </div>
+    </div>
+  )
+}
+
 
 const defaultValues = {
 
@@ -62,27 +84,7 @@ const Login = () => {
   // ** Hooks
 
 
-  const getData = async () =>{
-    try {
-  
-      const  res = await client.get('http://127.0.0.1:8000/sales-api/get-purchase-offer',{
-        headers:{
-          Accept:'application/json',
-          Authorization: `Bearer ${localStorage.accessToken}`
-        }
-      })
-         console.log(res.data)
-      
-     
-  
-  
-  
-    
-    } catch (error) {
-      console.log(error)    
-    }
-  
-  }
+
 
 
   const { skin } = useSkin()
@@ -105,10 +107,15 @@ const Login = () => {
         username: data.loginEmail, password: data.password
       })
       // console.log(res.data.token)
+      res.data.error && toast(t => (
+        <ToastError t={t}  errName={'LoginError'} />
+      ))
       console.log(res);
       // console.log(res.data.token);
       dispatch(handleLogin(res.data))
-      getData()
+      res.data.username && toast(t => (
+        <ToastContent t={t} role={res.data.managing_level || 'admin'} name={res.data.username || 'John Doe'} />
+      ))
       // console.log(localStorage.accessToken)
       // resetFormFields()
       //  localStorage.setItem("token", res.data.user.token)
@@ -118,13 +125,16 @@ const Login = () => {
           subject: 'all'
         }
       ]
-      
+
       navigate(getHomeRouteForLoggedInUser(localStorage.managing_level))
       ability.update(ability1)
 
       // {res.data.username && navigate('/')}
     } catch (error) {
-      console.log(error)
+      console.log(error.code)
+      toast(t => (
+        <ToastError t={t} errName={error.code} />
+      ))
     }
   }
 
