@@ -20,17 +20,18 @@ export const authSlice = createSlice({
   reducers: {
     handleLogin: (state, action) => {
       state.userData = action.payload
-      console.log(action.payload)
+      // console.log(action.payload)
       // state[config.storageTokenKeyName] = action.payload[config.storageTokenKeyName]
       // state[config.storageRefreshTokenKeyName] = action.payload[config.storageRefreshTokenKeyName]
-    //  localStorage.setItem(action,"manage")
-    //  localStorage.setItem(action,"manage")
+      //  localStorage.setItem(action,"manage")
+      //  localStorage.setItem(action,"manage")
 
       localStorage.setItem('userData', JSON.stringify(action.payload))
-      localStorage.setItem('accessToken', JSON.stringify(action.payload.token))
+      localStorage.setItem('accessToken', (action.payload.token))
+      console.log(action.payload.token)
       localStorage.setItem('managing_level', JSON.stringify(action.payload.managing_level))
       // localStorage.setItem(config.storageRefreshTokenKeyName, JSON.stringify(action.payload.refreshToken))
-      
+
     },
     handleLogout: state => {
       state.userData = {}

@@ -8,16 +8,13 @@ export default [
     icon: <Home size={20} />,
     badge: 'light-warning',
     badgeText: '2',
-    action: 'manage',
-    resource: 'ceo',
     children: [
       {
         id: 'analyticsDash',
         title: 'Analytics',
         icon: <Circle size={12} />,
         navLink: '/dashboard/analytics',
-        action: 'manage',
-        resource: 'ceo',
+
       },
       {
         id: 'eCommerceDash',

@@ -12,7 +12,8 @@ import UiElementRoutes from './UiElements'
 import ExtensionsRoutes from './Extensions'
 import PageLayoutsRoutes from './PageLayouts'
 import AuthenticationRoutes from './Authentication'
-
+import FarmsRoutes from './Farms'
+import NotesRoutes from './notes'
 // ** Layouts
 import BlankLayout from '@layouts/BlankLayout'
 import VerticalLayout from '@src/layouts/VerticalLayout'
@@ -25,6 +26,7 @@ import PrivateRoute from '@components/routes/PrivateRoute'
 
 // ** Utils
 import { isObjEmpty } from '@utils'
+import SellingPortRoutes from './SellingPort'
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -42,6 +44,9 @@ const DefaultRoute = '/dashboard/ecommerce'
 const Routes = [
   ...AuthenticationRoutes,
   ...DashboardRoutes,
+  ...FarmsRoutes,
+  ...SellingPortRoutes,
+  ...NotesRoutes,
   ...AppRoutes,
   ...PagesRoutes,
   ...UiElementRoutes,
@@ -86,7 +91,7 @@ const MergeLayoutRoutes = (layout, defaultLayout) => {
             // eslint-disable-next-line multiline-ternary
             isObjEmpty(route.element.props) && isBlank === false
               ? // eslint-disable-next-line multiline-ternary
-                LayoutWrapper
+              LayoutWrapper
               : Fragment
 
           route.element = (

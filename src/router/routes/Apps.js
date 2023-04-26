@@ -88,7 +88,11 @@ const AppRoutes = [
   },
   {
     element: <Calendar />,
-    path: '/apps/calendar'
+    path: '/apps/calendar',
+    meta: {
+      action: 'manage',
+      resource: 'ceo'
+    }
   },
   {
     element: <Kanban />,
