@@ -86,7 +86,7 @@ const NotAuthorized = () => {
             tag={Link}
             color='primary'
             className='btn-sm-block mb-1'
-            to={user ? getHomeRouteForLoggedInUser(user.role) : '/'}
+            to={user ? getHomeRouteForLoggedInUser(user.managing_level) : '/'}
           >
             Back to Home
           </Button>

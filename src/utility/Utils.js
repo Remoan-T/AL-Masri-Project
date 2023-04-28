@@ -53,6 +53,7 @@ export const formatDateToMonthShort = (value, toTimeForCurrentDay = true) => {
 export const isUserLoggedIn = () => localStorage.getItem('userData')
 export const getUserData = () => JSON.parse(localStorage.getItem('userData'))
 
+
 /**
  ** This function is used for demo purpose route navigation
  ** In real app you won't need this function because your app will navigate to same route for each users regardless of ability

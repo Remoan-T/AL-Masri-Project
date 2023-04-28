@@ -1,12 +1,12 @@
 import { lazy } from 'react'
 
-const noteForm = lazy(() => import('../../views/notes/noteForm'))
-const showNotes = lazy(() => import('../../views/notes/showNotes'))
+const NoteForm = lazy(() => import('../../views/notes/noteForm'))
+const ShowNotes = lazy(() => import('../../views/notes/showNotes'))
 
 const NotesRoutes = [
     {
         path: '/notes/noteForm',
-        element: <noteForm />,
+        element: <NoteForm />,
         meta: {
             action: 'read',
             resource: 'ceo'
@@ -14,7 +14,11 @@ const NotesRoutes = [
     },
     {
         path: '/notes/showNotes',
-        element: <showNotes />
+        element: <ShowNotes />,
+        meta: {
+            action: 'read',
+            resource: 'ceo'
+        }
     }
 ]
 

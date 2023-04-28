@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 // ** Third Party Components
 import { ChevronDown } from 'react-feather'
 import DataTable from 'react-data-table-component'
+import '@styles/react/libs/tables/react-dataTable-component.scss'
 
 
 // ** Reactstrap Imports
@@ -54,6 +55,8 @@ const DataTablesBasic = () => {
     const handleRestore = id => {
         if (window.confirm('هل تريد استرجاع حساب منفذ بيع ؟؟')) {
             dispatch(RestorePort(id));
+            dispatch(getDeletedSelling())
+
         }
     };
 

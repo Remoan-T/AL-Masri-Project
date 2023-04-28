@@ -29,10 +29,12 @@ const Router = () => {
   const getHomeRoute = () => {
     const user = getUserData()
     if (user) {
-      return getHomeRouteForLoggedInUser(user.role)
+      console.log("🚀 ~ file: Router.js:36 ~ getHomeRoute ~ user.role:", localStorage.managing_level)
+      return getHomeRouteForLoggedInUser(user.managing_level)
     } else {
       return '/login'
     }
+
   }
 
   const routes = useRoutes([

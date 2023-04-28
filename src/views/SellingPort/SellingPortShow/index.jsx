@@ -1,10 +1,11 @@
 // ** Table Columns
 import { useDispatch, useSelector } from 'react-redux'
-import { getSellingPort, RestorePort } from '../store'
+import { getSellingPort, removePort } from '../store'
 import { useEffect } from 'react'
 // ** Third Party Components
 import { ChevronDown } from 'react-feather'
 import DataTable from 'react-data-table-component'
+import '@styles/react/libs/tables/react-dataTable-component.scss'
 
 
 // ** Reactstrap Imports
@@ -15,9 +16,9 @@ const DataTablesBasic = () => {
         {
             name: 'id',
             selector: 'id'
-    
+
         },
-    
+
         {
             name: 'اسم',
             selector: 'name'
@@ -38,6 +39,15 @@ const DataTablesBasic = () => {
             name: 'مالك',
             selector: 'owner'
         }
+        ,
+        {
+            name: 'Actions',
+            cell: row => (
+                <button  onClick={() => handleDelete(row.id)} color='primary'>
+                DELETE</button>
+
+            )
+        }
     ]
     const store = useSelector(state => state.selling)
 
@@ -45,8 +55,13 @@ const DataTablesBasic = () => {
     useEffect(() => {
         dispatch(getSellingPort())
     }, [dispatch, store.SellingPort.length])
-    
 
+    const handleDelete = id => {
+        if (window.confirm('هل تريد حذف منفذ بيع ؟؟')) {
+            dispatch(removePort(id));
+            dispatch(getSellingPort())
+        }
+    };
     console.log(store.SellingPort)
     return (
         <Card className='overflow-hidden'>

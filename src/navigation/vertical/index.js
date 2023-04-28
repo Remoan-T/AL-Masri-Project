@@ -9,6 +9,7 @@ import dashboards from './dashboards'
 import uiElements from './ui-elements'
 import Farms from './Farms'
 import SellingPort from './SellingPort'
-
+import notes from'./Notes'
+import order from './order'
 // ** Merge & Export
-export default [...dashboards, ...Farms, ...SellingPort, ...apps, ...pages, ...uiElements, ...forms, ...tables, ...charts, ...others]
+export default [...dashboards, ...Farms, ...SellingPort,...notes,...order, ...apps, ...pages, ...uiElements, ...forms, ...tables, ...charts, ...others]

@@ -26,9 +26,9 @@ const PrivateRoute = ({ children, route }) => {
     if (user && restrictedRoute) {
       return <Navigate to='/' />
     }
-    if (user && restrictedRoute && user.managing_level === 'Purchasing-and-Sales-manager') {
-      return <Navigate to='/access-control' />
-    }
+    // if (user && restrictedRoute && user.managing_level === 'Purchasing-and-Sales-manager') {
+    //   return <Navigate to='/' />
+    // }
     // if (user && !ability.can(action || 'read', resource)) {
     //   return <Navigate to='/misc/not-authorized' replace />
     // }

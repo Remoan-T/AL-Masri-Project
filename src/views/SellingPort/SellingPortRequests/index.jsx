@@ -1,69 +1,78 @@
-// // ** Table Columns
-// import { useDispatch, useSelector } from 'react-redux'
-// import { getFarmData } from '../store'
-// import { useEffect } from 'react'
-// // ** Third Party Components
-// import { ChevronDown } from 'react-feather'
-// import DataTable from 'react-data-table-component'
+// ** Table Columns
+import { useDispatch, useSelector } from 'react-redux'
+import {  getSellingPortOffer } from '../store'
+import { useEffect } from 'react'
+// ** Third Party Components
+import { ChevronDown } from 'react-feather'
+import DataTable from 'react-data-table-component'
+import '@styles/react/libs/tables/react-dataTable-component.scss'
+
+// ** Icon Imports
+// import Icon from '@src/core/components/icon'
 
 
-// // ** Reactstrap Imports
-// import { Card, CardHeader, CardTitle } from 'reactstrap'
-// const columns = [
-//     {
-//         name: 'id',
-//         selector: 'id'
+// ** Reactstrap Imports
+import { Card, CardHeader, CardTitle } from 'reactstrap'
 
-//     },
-//     {
-//         name: 'الكمية',
-//         selector: 'total_amount'
-//     },
-//     {
-//         name: 'اسم',
-//         selector: 'farm.name'
-//     },
-//     {
-//         name: 'عنوان',
-//         selector: 'farm.location'
-//     },
-//     {
-//         name: 'هاتف',
-//         selector: 'farm.mobile_number'
-//     },
-//     {
-//         name: 'مالك',
-//         selector: 'farm.owner'
-//     }
-// ]
-// const DataTablesBasic = () => {
-//     const store = useSelector(state => state.farm)
+// ** Reactstrap Imports
+const ExpandedComponent = ({ data }) => <div >
 
-//     const dispatch = useDispatch()
-//     useEffect(() => {
-//         dispatch(getFarmData())
-//     }, [dispatch, store.data.length])
+    {data.sales_purchasing_requset_detail.map(home => <p>{home.name}</p>)}
+</div>
 
 
-//     console.log(store.data)
-//     return (
-//         <Card className='overflow-hidden'>
-//             <CardHeader>
-//                 <CardTitle tag='h4'>المزارع المتاحة</CardTitle>
-//             </CardHeader>
-//             <div className='react-dataTable'>
-//                 <DataTable
-//                     noHeader
-//                     pagination
-//                     data={store.data}
-//                     columns={columns}
-//                     className='react-dataTable'
-//                     sortIcon={<ChevronDown size={10} />}
-//                     paginationRowsPerPageOptions={[10, 25, 50, 100]}
-//                 />
-//             </div>
-//         </Card>
-//     )
-// }
+const DataTablesBasic = () => {
+    const columns = [
+        {
+            name: 'id',
+            selector: 'id'
 
-// export default DataTablesBasic
+        },
+
+        {
+            name: 'اسم',
+            selector: 'total_amount'
+        },
+
+        {
+            name: 'Actions',
+            cell: row => (
+                <button aria-label='capture screenshot' onClick={() => handleDelete(row.id)} color='primary'>
+                    delete
+                </button>
+
+            )
+        }
+    ]
+    const store = useSelector(state => state.selling)
+
+    const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(getSellingPortOffer())
+    }, [dispatch, store.SellingPortOffer.length])
+
+    return (
+        <Card className='overflow-hidden'>
+            <CardHeader>
+                <CardTitle tag='h4'>Zero Configuration</CardTitle>
+            </CardHeader>
+            <div className='react-dataTable'>
+                <DataTable
+                    noHeader
+                    pagination
+                    data={store.SellingPortOffer}
+                    columns={columns}
+                    className='react-dataTable'
+                    expandableRows={true}
+                    expandableRowsComponent={ExpandedComponent}
+                    expandOnRowClicked={false}
+                    expandOnRowDoubleClicked={false}
+                    expandableRowsHideExpander={false}
+                    paginationRowsPerPageOptions={[10, 25, 50, 100]}
+                />
+            </div>
+        </Card>
+    )
+}
+
+export default DataTablesBasic

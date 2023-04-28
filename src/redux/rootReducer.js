@@ -14,6 +14,8 @@ import dataTables from '@src/views/tables/data-tables/store'
 import permissions from '@src/views/apps/roles-permissions/store'
 import farm from '../views/farms/store'
 import selling from '../views/SellingPort/store'
+import notes from '../views/notes/store'
+import order from'../views/orders/store'
 const rootReducer = {
   auth,
   todo,
@@ -29,7 +31,9 @@ const rootReducer = {
   dataTables,
   permissions,
   farm,
-  selling
+  selling,
+  notes,
+  order
 }
 
 export default rootReducer

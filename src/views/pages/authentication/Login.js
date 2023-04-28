@@ -86,12 +86,22 @@ const Login = () => {
       dispatch(handleLogin(res.data))
       // resetFormFields()
       //  localStorage.setItem("token", res.data.user.token)
+      // Store the ability array in localStorage
       const ability1 = [
         {
           action: 'manage',
           subject: 'ceo'
         }
       ]
+localStorage.setItem('ability2', JSON.stringify(ability1));
+
+// Retrieve the ability array from localStorage when the page is refreshed
+const storedAbilities = localStorage.getItem('ability2');
+console.log("🚀 ~ file: Login.js:100 ~ onSubmit ~ storedAbilities:", storedAbilities)
+// if (storedAbilities) {
+//   abilities = JSON.parse(storedAbilities);
+// }
+      
       ability.update(ability1)
       navigate(getHomeRouteForLoggedInUser(res.data.managing_level))
 

@@ -14,6 +14,7 @@ import PageLayoutsRoutes from './PageLayouts'
 import AuthenticationRoutes from './Authentication'
 import FarmsRoutes from './Farms'
 import NotesRoutes from './notes'
+import OrderRoutes from './orders'
 // ** Layouts
 import BlankLayout from '@layouts/BlankLayout'
 import VerticalLayout from '@src/layouts/VerticalLayout'
@@ -45,6 +46,7 @@ const Routes = [
   ...AuthenticationRoutes,
   ...DashboardRoutes,
   ...FarmsRoutes,
+  ...OrderRoutes,
   ...SellingPortRoutes,
   ...NotesRoutes,
   ...AppRoutes,

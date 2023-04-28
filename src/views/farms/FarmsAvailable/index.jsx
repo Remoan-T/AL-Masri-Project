@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 // ** Third Party Components
 import { ChevronDown } from 'react-feather'
 import DataTable from 'react-data-table-component'
+import '@styles/react/libs/tables/react-dataTable-component.scss'
 
 // ** Icon Imports
 // import Icon from '@src/core/components/icon'
@@ -41,9 +42,9 @@ const DataTablesBasic = () => {
         {
             name: 'Actions',
             cell: row => (
-                <IconButton aria-label='capture screenshot' onClick={() => handleDelete(row.id)} color='primary'>
-                    <Icon icon='material-symbols:delete-outline-rounded' />
-                </IconButton>
+                <button aria-label='capture screenshot' onClick={() => handleDelete(row.id)} color='primary'>
+                    delete
+                </button>
 
             )
         }

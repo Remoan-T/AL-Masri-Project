@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 // ** Third Party Components
 import { ChevronDown } from 'react-feather'
 import DataTable from 'react-data-table-component'
+import '@styles/react/libs/tables/react-dataTable-component.scss'
 
 
 // ** Reactstrap Imports
@@ -51,6 +52,7 @@ const DataTablesBasic = () => {
     const handleDelete = id => {
         if (window.confirm('هل تريد الموافقة على حساب منفذ بيع ؟؟')) {
             dispatch(AcceptPort(id));
+            dispatch(getSellingReqData())
         }
     };
     console.log(store.data)
