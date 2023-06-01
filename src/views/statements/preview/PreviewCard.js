@@ -1,15 +1,41 @@
 // ** Reactstrap Imports
-import { Card, CardBody, CardText, Row, Col, Table } from 'reactstrap'
-import { useParams } from 'react-router-dom'
+import { Card, CardBody, CardText, Row, Col, Table,Alert } from 'reactstrap'
+import { useParams  ,Link} from 'react-router-dom'
 import { ReactComponent as Almasri } from '@src/assets/images/svg/almasri.svg';
+import { useState,useEffect } from 'react';
 
 const PreviewCard = ({ data }) => {
   const { id } = useParams()
-  const SingleStatement = data.find((statement) => statement.id === Number(id));
+  const [loading, setLoading] = useState(true);
+  const [SingleStatement, setSingleStatement] = useState(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const statement = data.find((statement) => statement.id === Number(id));
+      setSingleStatement(statement);
+      setLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, [data, id]);
+
+  if (loading) {
+    return <div className="text-center my-3">
+    <div className="spinner-border text-primary" role="status">
+      <span className="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  }
+
   if (!SingleStatement) {
-    return null
-    // <div>ssss</div> // or return a loading indicator or error message
-}
+    return   <Alert color='danger fs-4'>
+    <h2 className='alert-heading'>كشف غير موجود</h2>
+    <div className='alert-body'>
+      الكشف ذو الرقم {id} غير موجود توجه لعرض الكشوف :{' '}
+      <Link className='text-decoration-underline' to='/statements/DisplayStatements'>عرض الكشوف</Link>
+    </div>
+  </Alert>
+  }
 
 
   return data !== null ? (

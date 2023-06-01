@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, Link } from 'react-router-dom'
 import { getStatements } from '../store'
-// import { useParams } from 'react-router-dom'
 
 
 // ** Third Party Components
@@ -15,8 +14,6 @@ import { Row, Col, Alert } from 'reactstrap'
 // ** Invoice Preview Components
 import PreviewCard from './PreviewCard'
 import PreviewActions from './PreviewActions'
-import AddPaymentSidebar from '../shared-sidebar/SidebarAddPayment'
-import SendInvoiceSidebar from '../shared-sidebar/SidebarSendInvoice'
 
 // ** Styles
 import '@styles/base/pages/app-invoice.scss'
@@ -31,15 +28,13 @@ const InvoicePreview = () => {
   const [addPaymentOpen, setAddPaymentOpen] = useState(false)
 
   // ** Functions to toggle add & send sidebar
-  const toggleSendSidebar = () => setSendSidebarOpen(!sendSidebarOpen)
-  const toggleAddSidebar = () => setAddPaymentOpen(!addPaymentOpen)
+
 
   // ** Get invoice on mount based on id
   const dispatch = useDispatch()
   useEffect(() => {
 
       dispatch(getStatements())
-console.log(store.data)
 
   }, [dispatch, store.data.length])
   // && data.invoice !== undefined
@@ -58,19 +53,9 @@ console.log(store.data)
           </div> */}
         </Col>
       </Row>
-      {/* <SendInvoiceSidebar toggleSidebar={toggleSendSidebar} open={sendSidebarOpen} />
-      <AddPaymentSidebar toggleSidebar={toggleAddSidebar} open={addPaymentOpen} /> */}
     </div>
     </div>
-  ) : (
-    <Alert color='danger'>
-      <h4 className='alert-heading'>Invoice not found</h4>
-      <div className='alert-body'>
-        Invoice with id: {id} doesn't exist. Check list of all invoices:{' '}
-        <Link to='/apps/invoice/list'>Invoice List</Link>
-      </div>
-    </Alert>
-  )
+  ) : null
 
 }
 
