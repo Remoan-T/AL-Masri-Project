@@ -13,7 +13,8 @@ export default [
         id: 'analyticsDash',
         title: 'Analytics',
         icon: <Circle size={12} />,
-        navLink: '/dashboard/analytics'
+        navLink: '/dashboard/analytics',
+
       },
       {
         id: 'eCommerceDash',

@@ -53,6 +53,7 @@ export const formatDateToMonthShort = (value, toTimeForCurrentDay = true) => {
 export const isUserLoggedIn = () => localStorage.getItem('userData')
 export const getUserData = () => JSON.parse(localStorage.getItem('userData'))
 
+
 /**
  ** This function is used for demo purpose route navigation
  ** In real app you won't need this function because your app will navigate to same route for each users regardless of ability
@@ -63,8 +64,13 @@ export const getUserData = () => JSON.parse(localStorage.getItem('userData'))
  */
 export const getHomeRouteForLoggedInUser = userRole => {
   if (userRole === 'admin') return DefaultRoute
-  if (userRole === 'client') return '/access-control'
+  if (userRole === 'Purchasing-and-Sales-manager') return '/access-control'
+  if (userRole === 'Mechanism-Coordinator') return '/access-control'
+  if (userRole === 'libra-commander') return '/access-control'
   if (userRole === 'dani') return '/dashboard/ecommerce'
+  if (userRole === 'slaughter_supervisor') return '/access-control'
+  if (userRole === 'cutting_supervisor') return '/access-control'
+  if (userRole === 'warehouse_supervisor') return '/access-control'
 
   return '/login'
 }

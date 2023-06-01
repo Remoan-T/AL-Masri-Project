@@ -11,7 +11,7 @@ const Calendar = lazy(() => import('../../views/apps/calendar'))
 const InvoiceAdd = lazy(() => import('../../views/apps/invoice/add'))
 const InvoiceList = lazy(() => import('../../views/apps/invoice/list'))
 const InvoiceEdit = lazy(() => import('../../views/apps/invoice/edit'))
-const InvoicePrint = lazy(() => import('../../views/apps/invoice/print'))
+
 const InvoicePreview = lazy(() => import('../../views/apps/invoice/preview'))
 
 const EcommerceShop = lazy(() => import('../../views/apps/ecommerce/shop'))
@@ -88,7 +88,11 @@ const AppRoutes = [
   },
   {
     element: <Calendar />,
-    path: '/apps/calendar'
+    path: '/apps/calendar',
+    meta: {
+      action: 'manage',
+      resource: 'ceo'
+    }
   },
   {
     element: <Kanban />,
@@ -122,13 +126,7 @@ const AppRoutes = [
     element: <InvoiceAdd />,
     path: '/apps/invoice/add'
   },
-  {
-    path: '/apps/invoice/print',
-    element: <InvoicePrint />,
-    meta: {
-      layout: 'blank'
-    }
-  },
+  
   {
     element: <EcommerceShop />,
     path: '/apps/ecommerce/shop',

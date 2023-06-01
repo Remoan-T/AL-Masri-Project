@@ -4,6 +4,8 @@ import { Fragment } from 'react'
 // ** Routes Imports
 import AppRoutes from './Apps'
 import FormRoutes from './Forms'
+import StatmentRoutes from './Statments'
+
 import PagesRoutes from './Pages'
 import TablesRoutes from './Tables'
 import ChartsRoutes from './Charts'
@@ -12,7 +14,15 @@ import UiElementRoutes from './UiElements'
 import ExtensionsRoutes from './Extensions'
 import PageLayoutsRoutes from './PageLayouts'
 import AuthenticationRoutes from './Authentication'
-
+import FarmsRoutes from './Farms'
+import NotesRoutes from './notes'
+import OrderRoutes from './orders'
+import TripsRoutes from './trips'
+import DriversRoutes from './drivers'
+import TrucksRoutes from './trucks'
+import slaughterRoutes from './slaughter_supervisor'
+import cuttingRoutes from './cutting_supervisor'
+import WarehouseRoutes from './warehouse'
 // ** Layouts
 import BlankLayout from '@layouts/BlankLayout'
 import VerticalLayout from '@src/layouts/VerticalLayout'
@@ -25,6 +35,7 @@ import PrivateRoute from '@components/routes/PrivateRoute'
 
 // ** Utils
 import { isObjEmpty } from '@utils'
+import SellingPortRoutes from './SellingPort'
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -42,14 +53,26 @@ const DefaultRoute = '/dashboard/ecommerce'
 const Routes = [
   ...AuthenticationRoutes,
   ...DashboardRoutes,
+  ...FarmsRoutes,
+  ...OrderRoutes,
+  ...SellingPortRoutes,
+  ...NotesRoutes,
   ...AppRoutes,
+  ...StatmentRoutes,
   ...PagesRoutes,
   ...UiElementRoutes,
   ...ExtensionsRoutes,
   ...PageLayoutsRoutes,
   ...FormRoutes,
   ...TablesRoutes,
-  ...ChartsRoutes
+  ...ChartsRoutes,
+  ...WarehouseRoutes,
+  ...TripsRoutes,
+  ...TrucksRoutes,
+  ...DriversRoutes,
+  ...slaughterRoutes,
+  ...cuttingRoutes
+
 ]
 
 const getRouteMeta = route => {
@@ -86,7 +109,7 @@ const MergeLayoutRoutes = (layout, defaultLayout) => {
             // eslint-disable-next-line multiline-ternary
             isObjEmpty(route.element.props) && isBlank === false
               ? // eslint-disable-next-line multiline-ternary
-                LayoutWrapper
+              LayoutWrapper
               : Fragment
 
           route.element = (

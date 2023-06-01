@@ -17,6 +17,8 @@ export default [
     id: 'menuLevels',
     title: 'Menu Levels',
     icon: <Menu size={20} />,
+    action: 'manage',
+    resource: 'ceo',
     children: [
       {
         id: 'secondLevel',
