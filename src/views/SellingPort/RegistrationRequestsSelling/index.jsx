@@ -6,41 +6,43 @@ import { useEffect } from 'react'
 import { ChevronDown } from 'react-feather'
 import DataTable from 'react-data-table-component'
 import '@styles/react/libs/tables/react-dataTable-component.scss'
-
+import "@styles/base/plugins/extensions/ext-component-sweet-alerts.scss";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 // ** Reactstrap Imports
 import { Card, CardHeader, CardTitle } from 'reactstrap'
-
+const MySwal = withReactContent(Swal);
 const DataTablesBasic = () => {
     const columns = [
         {
-            name: 'id',
-            selector: 'id'
-
-        },
+            name: '#',
+            name: '#', selector: (row, index) => index + 1, sortable: false
+      
+          },
 
         {
             name: 'اسم',
-            selector: 'name'
+            selector: row => row.name
         },
         {
             name: 'عنوان',
-            selector: 'location'
+            selector: row => row.location
         },
         {
             name: 'نوع المنفذ',
-            selector: 'type'
+            selector: row => row.type
         },
         {
             name: 'مالك',
-            selector: 'owner'
+            selector: row => row.owner
         },
         {
-            name: 'Actions',
+
             cell: row => (
-                <button onClick={() => handleDelete(row.id)}>Accept</button>
+              <button  className='btn-sm btn btn-primary' onClick={() => handleConfirmText(row.id)}>تأكيد الطلب</button>
             )
-        }
+          }
     ]
     const store = useSelector(state => state.selling)
 
@@ -55,6 +57,27 @@ const DataTablesBasic = () => {
             dispatch(getSellingReqData())
         }
     };
+
+    const handleConfirmText = (id) => {
+        return MySwal.fire({
+          title: "هل تريد قبول الطلب ؟",
+          text: "",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "قبول",
+          cancelButtonText: "إالغاء",
+          customClass: {
+            confirmButton: "btn btn-success",
+            cancelButton: "btn btn-outline-danger ms-1",
+          },
+          buttonsStyling: false,
+        }).then(function (result) {
+          if (result.value) {
+            dispatch(AcceptPort(id));
+            dispatch(getSellingReqData())
+          }
+        });
+      };
     console.log(store.data)
     return (
         <Card className='overflow-hidden'>

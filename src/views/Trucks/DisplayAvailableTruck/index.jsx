@@ -1,9 +1,9 @@
 // ** Table Columns
 import { useDispatch, useSelector } from "react-redux";
-import { getAvailableTrucks ,removeTruck} from "../store";
+import { getAvailableTrucks, removeTruck } from "../store";
 import { useEffect, useState } from "react";
 // ** Third Party Components
-import { ChevronDown, Share, Grid,Trash2,Search  } from "react-feather";
+import { ChevronDown, Share, Grid, Trash2, Search } from "react-feather";
 import DataTable from "react-data-table-component";
 
 //styles
@@ -43,18 +43,18 @@ const DataTablesBasic = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showNoDataMessage, setShowNoDataMessage] = useState(false);
-  
+
 
   const handleExport = () => {
     const fileType =
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
     const fileExtension = ".xlsx";
-    const fileName ="الشاحنات المتوفرة";
+    const fileName = "الشاحنات المتوفرة";
     const formattedData = store.AvailableTrucks.map(
       ({ id, name, model, truck_number, storage_capacity, governorate_name }) => ({
         المعرف: id,
         الاسم: name,
-        الموديل:model,
+        الموديل: model,
         رقم_اللوحة: truck_number,
         سعة_الشاحنة: storage_capacity,
         المحافظة: governorate_name
@@ -77,18 +77,18 @@ const DataTablesBasic = () => {
       updatedData = store.AvailableTrucks.filter((item) => {
         const startsWith =
           item.name.toLowerCase().startsWith(value.toLowerCase()) ||
-          item.governorate_name.toLowerCase().startsWith(value.toLowerCase())||
+          item.governorate_name.toLowerCase().startsWith(value.toLowerCase()) ||
           item.truck_number.toString().startsWith(value) ||
-          item.model.toLowerCase().startsWith(value.toLowerCase())||
+          item.model.toLowerCase().startsWith(value.toLowerCase()) ||
           item.storage_capacity.toString().startsWith(value.toLowerCase())
 
 
         const includes =
-        item.name.toLowerCase().includes(value.toLowerCase()) ||
-        item.governorate_name.toLowerCase().includes(value.toLowerCase())||
-        item.truck_number.toString().includes(value) ||
-        item.model.toLowerCase().includes(value.toLowerCase())||
-        item.storage_capacity.toString().includes(value.toLowerCase())
+          item.name.toLowerCase().includes(value.toLowerCase()) ||
+          item.governorate_name.toLowerCase().includes(value.toLowerCase()) ||
+          item.truck_number.toString().includes(value) ||
+          item.model.toLowerCase().includes(value.toLowerCase()) ||
+          item.storage_capacity.toString().includes(value.toLowerCase())
 
         if (startsWith) {
           return startsWith;
@@ -125,26 +125,35 @@ const DataTablesBasic = () => {
       selector: (row) => row.storage_capacity,
     },
     {
-        name: "رقم اللوحة",
-        selector: (row) => row.truck_number,
-      },
-      {
-        name: "المحافظة",
-        selector: (row) => row.governorate_name,
-      },
+      name: "رقم اللوحة",
+      selector: (row) => row.truck_number,
+    },
+    {
+      name: "المحافظة",
+      selector: (row) => row.governorate_name,
+    },
+    {
+      name: "الحالة",
+      selector: (row) => row.state,
+    },
     {
       name: "",
       cell: (row) => (
-        // <button  onClick={() => handleConfirmText(row.id)} className='btn-sm btn btn-danger'>
-        //   حذف المزرعة
-        // </button>
         <Trash2
           stroke="#ea5455"
           className="cursor-pointer"
           onClick={() => handleConfirmText(row.id)}
         />
+
       ),
     },
+    // {
+    //   name: "",
+    //   cell: (row) => (
+
+    //     <button className='btn-sm btn btn-success' onClick={() => handleConfirmText(row.id)}>تعديل حالة الشاحنة</button>
+    //   ),
+    // },
   ];
   const store = useSelector((state) => state.truck);
 
@@ -152,8 +161,8 @@ const DataTablesBasic = () => {
   useEffect(() => {
     dispatch(getAvailableTrucks());
     console.log(store.AvailableTrucks)
-    
-  }, [dispatch, ]);
+
+  }, [dispatch,]);
 
 
   useEffect(() => {
@@ -211,17 +220,16 @@ const DataTablesBasic = () => {
       <CardHeader>
         <CardTitle >
           {" "}
-          <h2>الشاحنات المتاحة<br/><br/><h3 className="text-success">{store.AvailableTrucks == ""
-                ? null
-                : `عدد الشاحنات : ${
-                    searchValue.length
-                      ? filteredData.length
-                      : store.AvailableTrucks.length
-                  }`}</h3></h2>{" "}
+          <h2>الشاحنات المتاحة<br /><br /><h3 className="text-success">{store.AvailableTrucks == ""
+            ? null
+            : `عدد الشاحنات : ${searchValue.length
+              ? filteredData.length
+              : store.AvailableTrucks.length
+            }`}</h3></h2>{" "}
         </CardTitle>
         <div className="d-flex mt-md-0 mt-1">
           <UncontrolledButtonDropdown>
-            <DropdownToggle color="secondary" caret outline disabled={store.AvailableTrucks == ''}> 
+            <DropdownToggle color="secondary" caret outline disabled={store.AvailableTrucks == ''}>
               <Share size={15} />
               <span className="align-middle ms-50">تصدير</span>
             </DropdownToggle>
@@ -235,11 +243,11 @@ const DataTablesBasic = () => {
         </div>
       </CardHeader>
       <Row className="justify-content-end mx-0">
-      <InputGroup className='mb-2'>
-        <InputGroupText>
-          <Search size={14} />
-        </InputGroupText>
-        <Input
+        <InputGroup className='mb-2'>
+          <InputGroupText>
+            <Search size={14} />
+          </InputGroupText>
+          <Input
             className="dataTable-filter"
             type="text"
             onChange={handleFilter}
@@ -247,8 +255,8 @@ const DataTablesBasic = () => {
             value={searchValue}
             disabled={store.AvailableTrucks == ''}
             placeholder="البحث ..."
-          /> 
-      </InputGroup>
+          />
+        </InputGroup>
       </Row>
       {isLoading ? ( // Show the loading spinner while isLoading is true
         <div className="text-center my-3">
@@ -257,17 +265,17 @@ const DataTablesBasic = () => {
           </div>
         </div>
       ) : hasData ? (
-      <div className="react-dataTable">
-        <DataTable
-          noHeader
-          pagination
-          data={searchValue.length ? filteredData : store.AvailableTrucks}
-          columns={columns}
-          className="react-dataTable"
-          sortIcon={<ChevronDown size={10} />}
-          paginationRowsPerPageOptions={[10, 25, 50, 100]}
-        />
-      </div>
+        <div className="react-dataTable">
+          <DataTable
+            noHeader
+            pagination
+            data={searchValue.length ? filteredData : store.AvailableTrucks}
+            columns={columns}
+            className="react-dataTable"
+            sortIcon={<ChevronDown size={10} />}
+            paginationRowsPerPageOptions={[10, 25, 50, 100]}
+          />
+        </div>
       ) : showNoDataMessage ? (
         <div className="text-center my-3 text-danger h3">لا توجد بيانات</div>
       ) : null}

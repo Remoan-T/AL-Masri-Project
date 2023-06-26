@@ -15,15 +15,15 @@ export default [
         resource: 'lc'
     },
 
-    {
-        id: 'DisplaySpecificStatement',
-        title: 'DisplaySpecificStatement',
-        icon: <MessageSquare size={20} />,
-        navLink: '/statements/DisplaySpecificStatement',
-        action: 'read',
-        resource: 'lc'
-    }
-    ,
+    // {
+    //     id: 'DisplaySpecificStatement',
+    //     title: 'DisplaySpecificStatement',
+    //     icon: <MessageSquare size={20} />,
+    //     navLink: '/statements/DisplaySpecificStatement',
+    //     action: 'read',
+    //     resource: 'lc'
+    // }
+    // ,
     {
         id: 'DisplayStatements',
         title: 'DisplayStatements',

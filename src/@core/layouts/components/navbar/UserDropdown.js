@@ -43,12 +43,37 @@ const UserDropdown = () => {
       <DropdownToggle href='/' tag='a' className='nav-link dropdown-user-link' onClick={e => e.preventDefault()}>
         <div className='user-nav d-sm-flex d-none'>
           <span className='user-name fw-bold'>{(userData && userData['username']) || 'John Doe'}</span>
-          <span className='user-status'>{(userData && userData.managing_level) || 'Admin'}</span>
+          {userData &&
+            (() => {
+              switch (userData.managing_level) {
+                case 'libra-commander':
+                  return <span className='user-status fs-5'>آمر القبان</span>;
+                case 'Purchasing-and-Sales-manager':
+                  return <span className='user-status fs-5'>مدير المشتريات والمبيعات</span>;
+                case 'Mechanism-Coordinator':
+                  return <span className='user-status fs-5'>منسق حركة الآليات</span>;
+                case 'cutting_supervisor':
+                  return <span className='user-status fs-5'>مشرف قسم التقطيع</span>;
+                case 'slaughter_supervisor':
+                  return <span className='user-status fs-5'>مشرف قسم الذبح</span>;
+                case 'warehouse_supervisor':
+                  return <span className='user-status fs-5'>مشرف المخازن</span>;
+                case 'Manufacturing_Supervisor':
+                  return <span className='user-status fs-5'>مشرف التصنيع</span>;
+                case 'ceo':
+                  return <span className='user-status fs-5'>المدير التنفيذي</span>;
+                case 'Production_Manager':
+                  return <span className='user-status fs-5'>المدير الانتاج</span>;
+                default:
+                  return null;
+              }
+            })()
+          }
         </div>
         <Avatar img={userAvatar} imgHeight='40' imgWidth='40' status='online' />
       </DropdownToggle>
       <DropdownMenu end>
-        <DropdownItem tag={Link} to='/pages/profile'>
+        {/* <DropdownItem tag={Link} to='/pages/profile'>
           <User size={14} className='me-75' />
           <span className='align-middle'>Profile</span>
         </DropdownItem>
@@ -76,10 +101,10 @@ const UserDropdown = () => {
         <DropdownItem tag={Link} to='/pages/faq'>
           <HelpCircle size={14} className='me-75' />
           <span className='align-middle'>FAQ</span>
-        </DropdownItem>
+        </DropdownItem> */}
         <DropdownItem tag={Link} to='/login' onClick={() => dispatch(handleLogout())}>
           <Power size={14} className='me-75' />
-          <span className='align-middle'>Logout</span>
+          <span className='align-middle'>تسجيل الخروج</span>
         </DropdownItem>
       </DropdownMenu>
     </UncontrolledDropdown>

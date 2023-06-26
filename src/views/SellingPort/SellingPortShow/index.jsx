@@ -45,10 +45,7 @@ const DataTablesBasic = () => {
       selector: (row, index) => index + 1,
       sortable: false,
     },
-    {
-      name: "المعرف",
-      selector: (row) => row.id,
-    },
+ 
 
     {
       name: "الاسم",
@@ -201,6 +198,7 @@ const DataTablesBasic = () => {
             منافذ البيع
             <br />
             <br />
+            </h2>{" "}
             <h3 className="text-success">
               {" "}
               {store.SellingPort == ""
@@ -211,7 +209,7 @@ const DataTablesBasic = () => {
                       : store.SellingPort.length
                   }`}
             </h3>
-          </h2>{" "}
+        
         </CardTitle>
         <div className="d-flex mt-md-0 mt-1">
           <UncontrolledButtonDropdown>

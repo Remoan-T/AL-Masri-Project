@@ -50,7 +50,7 @@ const DataTablesBasic = () => {
       },
     {
       name: "الوزن",
-      selector: (row) => row.weight,
+      selector: (row) => `${row.weight} كغ`,
     },
     {
       name: "التاريخ",

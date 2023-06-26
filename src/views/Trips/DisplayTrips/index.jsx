@@ -2,6 +2,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { getTripsData } from "../store";
 import { useEffect, useState } from "react";
+import { customExpStyles } from "../../../assets/datatable/expandedStyles";
 // ** Third Party Components
 import { ChevronDown, Share, Grid, Trash2, Search } from "react-feather";
 import DataTable from "react-data-table-component";
@@ -38,6 +39,17 @@ const DataTablesBasic = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showNoDataMessage, setShowNoDataMessage] = useState(false);
+
+  const ExpandedComponent = ({ data }) => <div >
+
+  <DataTable
+    customStyles={customExpStyles}
+    data={data.requset1.sales_purchasing_requset_detail}
+    columns={columns2}
+    className='react-dataTable'
+    noHeader
+  />
+</div>
 
   const columns = [
     {
@@ -83,6 +95,17 @@ const DataTablesBasic = () => {
 
       }
     },
+    {
+      name: " الموقع",
+      // selector: row => row.requset1.selling_port.name
+      selector: row => {
+        if (row.farm_id)
+          return row.requset1.farm.location
+        if (row.selling_port_id)
+          return row.requset1.selling_port.location
+
+      }
+    },
     // {
     //   name: "المالك",
     //   selector: (row) => row.owner,
@@ -100,6 +123,21 @@ const DataTablesBasic = () => {
     // },
 
   ];
+
+  const columns2 = [
+    {
+      name: 'النوع',
+      selector: row => row.type
+    },
+    {
+      name: 'الكمية',
+      selector: row => row.amount
+
+    },
+
+
+
+  ]
   const store = useSelector((state) => state.trip);
 
   const dispatch = useDispatch();
@@ -135,15 +173,13 @@ const DataTablesBasic = () => {
     const fileType =
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
     const fileExtension = ".xlsx";
-    const fileName = "منافذ البيع";
+    const fileName = "الرحلات المتوفرة";
     const formattedData = store.tripsData.map(
-      ({ id, name, location, mobile_number, type, owner }) => ({
-        المعرف: id,
-        الاسم: name,
-        المكان: location,
-        النوع: type,
-        رقم_الهاتف: mobile_number,
-        المالك: owner,
+      ({ driver, truck,}) => ({
+       اسم_السائق: driver.name,
+       رقم_الشاحنة: truck.truck_number,
+       رقم_السائق: driver.mobile_number,
+
       })
     );
     const ws = XLSX.utils.json_to_sheet(formattedData);
@@ -161,18 +197,16 @@ const DataTablesBasic = () => {
     if (value.length) {
       updatedData = store.tripsData.filter((item) => {
         const startsWith =
-          item.name.toLowerCase().startsWith(value.toLowerCase()) ||
-          item.type.toLowerCase().startsWith(value.toLowerCase()) ||
-          item.mobile_number.toString().startsWith(value) ||
-          item.owner.toLowerCase().startsWith(value.toLowerCase()) ||
-          item.location.toString().startsWith(value.toLowerCase());
+          item.driver.name.toLowerCase().startsWith(value.toLowerCase()) ||
+          item.truck.name.toLowerCase().startsWith(value.toLowerCase()) ||
+          item.driver.mobile_number.toString().startsWith(value) ||
+          item.truck.truck_number.toString().startsWith(value.toLowerCase());
 
         const includes =
-          item.name.toLowerCase().includes(value.toLowerCase()) ||
-          item.type.toLowerCase().includes(value.toLowerCase()) ||
-          item.mobile_number.toString().includes(value) ||
-          item.owner.toLowerCase().includes(value.toLowerCase()) ||
-          item.location.toString().includes(value.toLowerCase());
+        item.driver.name.toLowerCase().includes(value.toLowerCase()) ||
+        item.truck.name.toLowerCase().includes(value.toLowerCase()) ||
+        item.driver.mobile_number.toString().includes(value) ||
+        item.truck.truck_number.toString().includes(value.toLowerCase());
 
         if (startsWith) {
           return startsWith;
@@ -216,19 +250,20 @@ const DataTablesBasic = () => {
         <CardTitle>
           {" "}
           <h2>
-            منافذ البيع
+            الرحلات المتوفرة
             <br />
             <br />
+            </h2>{" "}
             <h3 className="text-success">
               {" "}
               {store.tripsData == ""
                 ? null
-                : `عدد منافذ البيع : ${searchValue.length
+                : `عدد الرحلات : ${searchValue.length
                   ? filteredData.length
                   : store.tripsData.length
                 }`}
             </h3>
-          </h2>{" "}
+          
         </CardTitle>
         <div className="d-flex mt-md-0 mt-1">
           <UncontrolledButtonDropdown>
@@ -280,6 +315,11 @@ const DataTablesBasic = () => {
             data={searchValue.length ? filteredData : store.tripsData}
             columns={columns}
             className="react-dataTable"
+            expandableRows={true}
+            expandableRowsComponent={ExpandedComponent}
+            expandOnRowClicked={false}
+            expandOnRowDoubleClicked={false}
+            expandableRowsHideExpander={false}
             sortIcon={<ChevronDown size={10} />}
             paginationRowsPerPageOptions={[10, 25, 50, 100]}
           />

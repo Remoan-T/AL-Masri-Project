@@ -106,14 +106,14 @@ const CartDropdown = () => {
 
   return (
     <Dropdown isOpen={dropdownOpen} toggle={toggle} tag='li' className='dropdown-cart nav-item me-25'>
-      <DropdownToggle tag='a' className='nav-link position-relative'>
+      {/* <DropdownToggle tag='a' className='nav-link position-relative'>
         <ShoppingCart className='ficon' />
         {store.cart.length > 0 ? (
           <Badge pill color='primary' className='badge-up'>
             {store.cart.length}
           </Badge>
         ) : null}
-      </DropdownToggle>
+      </DropdownToggle> */}
       <DropdownMenu end tag='ul' className='dropdown-menu-media dropdown-cart mt-0'>
         <li className='dropdown-menu-header'>
           <DropdownItem tag='div' className='d-flex' header>

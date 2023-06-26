@@ -45,23 +45,32 @@ const DataTablesBasic = () => {
             selector: (row, index) => index + 1,
             sortable: false,
         },
-        // {
-        //     name: "اسم المزرعة",
-        //     selector: (row) => row.farm.name,
-        // },
 
         {
             name: "الوزن الكلي",
             selector: (row) => row.total_amount,
         },
-        // {
-        //     name: "رقم هاتف ",
-        //     selector: (row) => row.farm.mobile_number,
-        // },
-        // {
-        //   name: "المالك",
-        //   selector: (row) => row.owner,
-        // },
+        {
+            name: "نوع الوجهة",
+            selector: row => {
+              if (row.farm_id)
+                return <div>مزرعة</div>
+              if (row.selling_port_id)
+                return <div>منفذ بيع</div>
+      
+            }
+          },
+        //   {
+        //     name: " الوجهة",
+        //     // selector: row => row.requset1.selling_port.name
+        //     selector: row => {
+        //       if (row.farm_id)
+        //         return row.sales_purchasing_requset_detail.farm.name
+        //       if (row.selling_port_id)
+        //         return row.sales_purchasing_requset_detail.selling_port.name
+      
+        //     }
+        //   },
         // {
         //   cell: (row) => (
         //     // <button  onClick={() => handleDelete(row.id)} color='primary'>
@@ -145,20 +154,14 @@ const DataTablesBasic = () => {
         setSearchValue(value);
 
         if (value.length) {
-            updatedData = store.tripsData.filter((item) => {
+            updatedData = store.OrderData.filter((item) => {
                 const startsWith =
-                    item.name.toLowerCase().startsWith(value.toLowerCase()) ||
-                    item.type.toLowerCase().startsWith(value.toLowerCase()) ||
-                    item.mobile_number.toString().startsWith(value) ||
-                    item.owner.toLowerCase().startsWith(value.toLowerCase()) ||
-                    item.location.toString().startsWith(value.toLowerCase());
+
+                    item.total_amount.toString().startsWith(value.toLowerCase());
 
                 const includes =
-                    item.name.toLowerCase().includes(value.toLowerCase()) ||
-                    item.type.toLowerCase().includes(value.toLowerCase()) ||
-                    item.mobile_number.toString().includes(value) ||
-                    item.owner.toLowerCase().includes(value.toLowerCase()) ||
-                    item.location.toString().includes(value.toLowerCase());
+
+                    item.total_amount.toString().includes(value.toLowerCase());
 
                 if (startsWith) {
                     return startsWith;
@@ -202,39 +205,20 @@ const DataTablesBasic = () => {
                 <CardTitle>
                     {" "}
                     <h2>
-                        منافذ البيع
+                        أوامر الشراء
                         <br />
                         <br />
                         <h3 className="text-success">
                             {" "}
                             {store.OrderData == ""
                                 ? null
-                                : `عدد منافذ البيع : ${searchValue.length
+                                : `عدد الأوامر: ${searchValue.length
                                     ? filteredData.length
                                     : store.OrderData.length
                                 }`}
                         </h3>
                     </h2>{" "}
                 </CardTitle>
-                <div className="d-flex mt-md-0 mt-1">
-                    <UncontrolledButtonDropdown>
-                        <DropdownToggle
-                            color="secondary"
-                            caret
-                            outline
-                            disabled={store.OrderData == ""}
-                        >
-                            <Share size={15} />
-                            <span className="align-middle ms-50">تصدير</span>
-                        </DropdownToggle>
-                        <DropdownMenu>
-                            <DropdownItem className="w-100" onClick={() => handleExport()}>
-                                <Grid size={15} />
-                                <span className="align-middle ms-50">ملف Excel</span>
-                            </DropdownItem>
-                        </DropdownMenu>
-                    </UncontrolledButtonDropdown>
-                </div>
             </CardHeader>
             <Row className="justify-content-end mx-0">
                 <InputGroup className="mb-2">

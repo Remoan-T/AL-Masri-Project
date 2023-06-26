@@ -1,5 +1,8 @@
 // ** Redux Imports
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import toast from 'react-hot-toast'
+import ToastDone from '@src/assets/toast/toastDone.component'
+import ToastError from '@src/assets/toast/toastError.component'
 
 // ** Axios Imports
 import axios from 'axios'
@@ -42,7 +45,7 @@ export const getAvailableFarms = createAsyncThunk('appfarm/getAvailableFarms', a
 
         }
     })
-    // response.data.map(fm => console.log(fm))
+
     return {
         AvailableFarms: response.data
     }
@@ -64,13 +67,17 @@ export const getOfferFarms = createAsyncThunk('appfarm/getOfferFarms', async () 
 })
 ////////////////////////////////////////////////REMOVE FARM/////////////////////////
 export const removeFarm = createAsyncThunk('appfarm/removeFarm', async id => {
-    await axios.delete(`http://127.0.0.1:8000/sales-api/soft-delete-farm/${id}`, {
+  const response = await axios.delete(`http://127.0.0.1:8000/sales-api/soft-delete-farm/${id}`, {
         headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${localStorage.accessToken}`
 
         }
+        
     })
+    if (response.data.status == false) toast(t => (
+        <ToastError t={t} err={response.data.msg} />
+      ))
     return response.data
 })
 ////////////////////////////////////////////////Accept Port/////////////////////////
@@ -108,24 +115,19 @@ export const appFarmSlice = createSlice({
     extraReducers: builder => {
         builder.addCase(getFarmData.fulfilled, (state, action) => {
             state.data = action.payload.data
-            console.log(state.data)
-            //   state.params = action.payload.params
+
         })
         builder.addCase(getDeletedFarms.fulfilled, (state, action) => {
             state.deletedFarms = action.payload.deletedFarms
-            console.log(state.deletedFarms)
-            //   state.params = action.payload.params
+
         })
         builder.addCase(getOfferFarms.fulfilled, (state, action) => {
             state.OfferFarms = action.payload.OfferFarms
-            console.log(state.OfferFarms)
-            //   state.params = action.payload.params
+ 
         })
         builder.addCase(getAvailableFarms.fulfilled, (state, action) => {
             state.AvailableFarms = action.payload.AvailableFarms
-            console.log("🚀 ~ file: index.js:78 ~ builder.addCase ~ action.payload.data:", action.payload.AvailableFarms)
-            console.log(state.AvailableFarms)
-            //   state.params = action.payload.params
+
         })
             .addCase(removeFarm.fulfilled, (state, action) => {
                 state.status = 'succeeded';

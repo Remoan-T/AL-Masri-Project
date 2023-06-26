@@ -31,7 +31,7 @@ const Router = () => {
     if (user) {
       console.log("🚀 ~ file: Router.js:36 ~ getHomeRoute ~ user.role:", localStorage.managing_level)
       return getHomeRouteForLoggedInUser(user.managing_level)
-    } else {
+    } else if(!user) {
       return '/login'
     }
 

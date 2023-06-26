@@ -1,13 +1,13 @@
 // ** Table Columns
 import { useDispatch, useSelector } from "react-redux";
-import { getWarehouseWithDetails } from "../store";
-import { useEffect, useState } from "react";
-// ** Third Party Components
+import { DisplayLakeContent } from "../store";
+import { useEffect, useState,useContext  } from "react";
 import { Share, Grid, Search } from "react-feather";
 import DataTable from "react-data-table-component";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
+import { AbilityContext } from '@src/utility/context/Can'
 
 // ** Reactstrap Imports
 import {
@@ -55,20 +55,21 @@ const DataTablesBasic = () => {
 
         {
             name: "المادة",
-            selector: (row) => row.out_put__type__production.type,
+            selector: (row) => row.warehouse.out_put__type__production.type
+            ,
         },
 
         {
             name: "الوزن الكلي",
-            selector: (row) => row.tot_weight,
+            selector: (row) => row.weight,
         },
         {
             name: "الحد الادنى",
-            selector: (row) => row.minimum,
+            selector: (row) => row.warehouse.minimum,
         },
         {
             name: "المخزون الاحتياطي",
-            selector: (row) => row.stockpile,
+            selector: (row) => row.warehouse.stockpile,
         },
         {
             name: '',
@@ -78,7 +79,8 @@ const DataTablesBasic = () => {
                 // </button>
                 <div>
 
-                    <a href={`/statements/AddReceiptStatement/${row.id}`}>تعديل </a>
+                    
+                    {ability.can('read', 'ws') ?  (<a href={`/Warehouse/AddOutputLake/${row.id}`}>اضافة خرج</a>) : null}
                 </div>
             )
         }
@@ -156,7 +158,7 @@ const DataTablesBasic = () => {
     };
 
     const store = useSelector((state) => state.warehouse);
-
+    const ability = useContext(AbilityContext)
     const [searchValue, setSearchValue] = useState("");
     const [searchData, setsearchData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -175,8 +177,8 @@ const DataTablesBasic = () => {
     );
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(getWarehouseWithDetails());
-    }, [dispatch, store.warehouseDetails.length]);
+        dispatch(DisplayLakeContent());
+    }, [dispatch, store.LakeContent.length]);
 
     useEffect(() => {
         const delay = 500;
@@ -187,7 +189,7 @@ const DataTablesBasic = () => {
         return () => {
             clearTimeout(timer);
         };
-    }, [store.cuttingOutput]);
+    }, [store.LakeContent]);
 
     useEffect(() => {
         const delay = 1600;
@@ -204,7 +206,7 @@ const DataTablesBasic = () => {
 
     const hasData = searchValue.length
         ? searchData.length > 0
-        : store.warehouseDetails.length > 0;
+        : store.LakeContent.length > 0;
 
     return (
         <Card className="overflow-hidden">
@@ -212,28 +214,27 @@ const DataTablesBasic = () => {
                 <CardTitle>
                     {" "}
                     <h2>
-                        مخرجات قسم التقطيع
-                        <br />
+                        محتويات البحرات                        <br />
                         <br />
                         <h3 className="text-success">
                             {" "}
-                            {store.cuttingOutput == ""
+                            {store.LakeContent == ""
                                 ? null
-                                : `عدد المخرجات : ${searchValue.length
+                                : ` عدد محتويات البحرات  : ${searchValue.length
                                     ? searchData.length
-                                    : store.cuttingOutput.length
+                                    : store.LakeContent.length
                                 }`}
                         </h3>
                     </h2>{" "}
                 </CardTitle>
 
-                <div className="d-flex mt-md-0 mt-1">
+                {/* <div className="d-flex mt-md-0 mt-1">
                     <UncontrolledButtonDropdown>
                         <DropdownToggle
                             color="secondary"
                             caret
                             outline
-                            disabled={store.cuttingOutput == ""}
+                            disabled={store.LakeContent == ""}
                         >
                             <Share size={15} />
                             <span className="align-middle ms-50">تصدير</span>
@@ -245,9 +246,9 @@ const DataTablesBasic = () => {
                             </DropdownItem>
                         </DropdownMenu>
                     </UncontrolledButtonDropdown>
-                </div>
+                </div> */}
             </CardHeader>
-            <Row className="justify-content-end mx-0">
+            {/* <Row className="justify-content-end mx-0">
                 <InputGroup className="mb-2">
                     <InputGroupText>
                         <Search size={14} />
@@ -258,11 +259,16 @@ const DataTablesBasic = () => {
                         onChange={handleFilter}
                         id="search-input"
                         value={searchValue}
-                        disabled={store.cuttingOutput == ""}
+                        disabled={store.LakeContent == ""}
                         placeholder="البحث ..."
                     />
+                    
+                    {ability.can('read', 'ws') ? (<a href={`/Warehouse/AddOutputLake`} color="primary">
+                <button className='btn-sm btn btn-primary' style={{marginRight:'660px'}}>إضافة خرج</button>
+                </a>) : null}
+
                 </InputGroup>
-            </Row>
+            </Row> */}
             {isLoading ? ( // Show the loading spinner while isLoading is true
                 <div className="text-center my-3">
                     <div className="spinner-border text-primary" role="status">
@@ -274,14 +280,9 @@ const DataTablesBasic = () => {
                     <DataTable
                         noHeader
                         pagination
-                        data={searchValue.length ? searchData : store.warehouseDetails}
+                        data={searchValue.length ? searchData : store.LakeContent}
                         columns={columns}
                         className="react-dataTable"
-                        expandableRows={true}
-                        expandableRowsComponent={ExpandedComponent}
-                        expandOnRowClicked={false}
-                        expandOnRowDoubleClicked={false}
-                        expandableRowsHideExpander={false}
                         paginationRowsPerPageOptions={[10, 25, 50, 100]}
                     />
                 </div>

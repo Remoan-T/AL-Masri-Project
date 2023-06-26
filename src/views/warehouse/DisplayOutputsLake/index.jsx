@@ -1,6 +1,6 @@
 // ** Table Columns
 import { useDispatch, useSelector } from "react-redux";
-import { getWarehouseWithDetails } from "../store";
+import { DisplayOutputLakeContent } from "../store";
 import { useEffect, useState } from "react";
 // ** Third Party Components
 import { Share, Grid, Search } from "react-feather";
@@ -52,40 +52,24 @@ const DataTablesBasic = () => {
             selector: (row, index) => index + 1,
             sortable: false,
         },
-
         {
-            name: "المادة",
-            selector: (row) => row.out_put__type__production.type,
+            name: " وزن الخرج",
+            selector: (row) => row.weight,
+        },
+        {
+            name: " نوع المادة",
+            selector: (row) => row.lake.warehouse.out_put__type__production.type,
         },
 
         {
-            name: "الوزن الكلي",
-            selector: (row) => row.tot_weight,
+            name: "تاريخ الاخراج",
+            selector: (row) => row.created_at,
         },
         {
-            name: "الحد الادنى",
-            selector: (row) => row.minimum,
-        },
-        {
-            name: "المخزون الاحتياطي",
-            selector: (row) => row.stockpile,
-        },
-        {
-            name: '',
-            cell: row => (
-                // <button  onClick={() => handleConfirmText(row.id)} className='btn-sm btn btn-danger'>
-                //   حذف المزرعة
-                // </button>
-                <div>
-
-                    <a href={`/statements/AddReceiptStatement/${row.id}`}>تعديل </a>
-                </div>
-            )
+            name: "الاحراج الى ",
+            selector: (row) => row.output_to,
         }
-        // {
-        //   name: "الكمية الكلية",
-        //   selector: (row) => row.total_amount,
-        // },
+
     ];
     const columns2 = [
         {
@@ -166,7 +150,7 @@ const DataTablesBasic = () => {
         <div>
             <DataTable
                 customStyles={customStyles}
-                data={store.warehouseDetails}
+                data={store.OutputLakeContent}
                 columns={columns2}
                 className="react-dataTable"
                 noHeader
@@ -175,8 +159,8 @@ const DataTablesBasic = () => {
     );
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(getWarehouseWithDetails());
-    }, [dispatch, store.warehouseDetails.length]);
+        dispatch(DisplayOutputLakeContent());
+    }, [dispatch, store.OutputLakeContent.length]);
 
     useEffect(() => {
         const delay = 500;
@@ -204,7 +188,7 @@ const DataTablesBasic = () => {
 
     const hasData = searchValue.length
         ? searchData.length > 0
-        : store.warehouseDetails.length > 0;
+        : store.OutputLakeContent.length > 0;
 
     return (
         <Card className="overflow-hidden">
@@ -212,7 +196,7 @@ const DataTablesBasic = () => {
                 <CardTitle>
                     {" "}
                     <h2>
-                        مخرجات قسم التقطيع
+                        مخرجات البحرات
                         <br />
                         <br />
                         <h3 className="text-success">
@@ -227,7 +211,7 @@ const DataTablesBasic = () => {
                     </h2>{" "}
                 </CardTitle>
 
-                <div className="d-flex mt-md-0 mt-1">
+                {/* <div className="d-flex mt-md-0 mt-1">
                     <UncontrolledButtonDropdown>
                         <DropdownToggle
                             color="secondary"
@@ -245,9 +229,9 @@ const DataTablesBasic = () => {
                             </DropdownItem>
                         </DropdownMenu>
                     </UncontrolledButtonDropdown>
-                </div>
+                </div> */}
             </CardHeader>
-            <Row className="justify-content-end mx-0">
+            {/* <Row className="justify-content-end mx-0">
                 <InputGroup className="mb-2">
                     <InputGroupText>
                         <Search size={14} />
@@ -262,7 +246,7 @@ const DataTablesBasic = () => {
                         placeholder="البحث ..."
                     />
                 </InputGroup>
-            </Row>
+            </Row> */}
             {isLoading ? ( // Show the loading spinner while isLoading is true
                 <div className="text-center my-3">
                     <div className="spinner-border text-primary" role="status">
@@ -274,14 +258,9 @@ const DataTablesBasic = () => {
                     <DataTable
                         noHeader
                         pagination
-                        data={searchValue.length ? searchData : store.warehouseDetails}
+                        data={searchValue.length ? searchData : store.OutputLakeContent}
                         columns={columns}
                         className="react-dataTable"
-                        expandableRows={true}
-                        expandableRowsComponent={ExpandedComponent}
-                        expandOnRowClicked={false}
-                        expandOnRowDoubleClicked={false}
-                        expandableRowsHideExpander={false}
                         paginationRowsPerPageOptions={[10, 25, 50, 100]}
                     />
                 </div>

@@ -1,6 +1,6 @@
 // ** Table Columns
 import { useDispatch, useSelector } from "react-redux";
-import { getWarehouseWithDetails } from "../store";
+import { DisplayInputLakeContent } from "../store";
 import { useEffect, useState } from "react";
 // ** Third Party Components
 import { Share, Grid, Search } from "react-feather";
@@ -55,32 +55,20 @@ const DataTablesBasic = () => {
 
         {
             name: "المادة",
-            selector: (row) => row.out_put__type__production.type,
+            selector: (row) => row.warehouse.out_put__type__production.type,
         },
 
         {
             name: "الوزن الكلي",
-            selector: (row) => row.tot_weight,
+            selector: (row) => row.weight,
         },
         {
             name: "الحد الادنى",
-            selector: (row) => row.minimum,
+            selector: (row) => row.warehouse.minimum,
         },
         {
             name: "المخزون الاحتياطي",
-            selector: (row) => row.stockpile,
-        },
-        {
-            name: '',
-            cell: row => (
-                // <button  onClick={() => handleConfirmText(row.id)} className='btn-sm btn btn-danger'>
-                //   حذف المزرعة
-                // </button>
-                <div>
-
-                    <a href={`/statements/AddReceiptStatement/${row.id}`}>تعديل </a>
-                </div>
-            )
+            selector: (row) => row.warehouse.stockpile,
         }
         // {
         //   name: "الكمية الكلية",
@@ -89,14 +77,23 @@ const DataTablesBasic = () => {
     ];
     const columns2 = [
         {
-            name: "البراد الصفري",
-            selector: (row) => row.zero_frige.weight,
+            name: "الوزن المدخل",
+            selector: (row) => row.weight,
         },
         {
-            name: "البحرات",
-            selector: (row) => row.lake.weight,
+            name: "الوزن الحالي",
+            selector: (row) => row.cur_weight,
         },
-
+        {
+            name: "الدخل من",
+            selector: (row) => row.input_from
+            ,
+        },
+        {
+            name: "تاريخ الادخال",
+            selector: (row) => row.created_at
+            ,
+        },
     ];
 
     const handleExport = () => {
@@ -166,7 +163,7 @@ const DataTablesBasic = () => {
         <div>
             <DataTable
                 customStyles={customStyles}
-                data={store.warehouseDetails}
+                data={data.lake_details}
                 columns={columns2}
                 className="react-dataTable"
                 noHeader
@@ -175,8 +172,8 @@ const DataTablesBasic = () => {
     );
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(getWarehouseWithDetails());
-    }, [dispatch, store.warehouseDetails.length]);
+        dispatch(DisplayInputLakeContent());
+    }, [dispatch, store.InputLakeContent.length]);
 
     useEffect(() => {
         const delay = 500;
@@ -187,7 +184,7 @@ const DataTablesBasic = () => {
         return () => {
             clearTimeout(timer);
         };
-    }, [store.cuttingOutput]);
+    }, [store.InputLakeContent]);
 
     useEffect(() => {
         const delay = 1600;
@@ -204,7 +201,7 @@ const DataTablesBasic = () => {
 
     const hasData = searchValue.length
         ? searchData.length > 0
-        : store.warehouseDetails.length > 0;
+        : store.InputLakeContent.length > 0;
 
     return (
         <Card className="overflow-hidden">
@@ -212,28 +209,28 @@ const DataTablesBasic = () => {
                 <CardTitle>
                     {" "}
                     <h2>
-                        مخرجات قسم التقطيع
+                        مدخلات البحرات
                         <br />
                         <br />
                         <h3 className="text-success">
                             {" "}
-                            {store.cuttingOutput == ""
+                            {store.InputLakeContentt == ""
                                 ? null
-                                : `عدد المخرجات : ${searchValue.length
+                                : `عدد المدخلات : ${searchValue.length
                                     ? searchData.length
-                                    : store.cuttingOutput.length
+                                    : store.InputLakeContent.length
                                 }`}
                         </h3>
                     </h2>{" "}
                 </CardTitle>
 
-                <div className="d-flex mt-md-0 mt-1">
+                {/* <div className="d-flex mt-md-0 mt-1">
                     <UncontrolledButtonDropdown>
                         <DropdownToggle
                             color="secondary"
                             caret
                             outline
-                            disabled={store.cuttingOutput == ""}
+                            disabled={store.InputLakeContent == ""}
                         >
                             <Share size={15} />
                             <span className="align-middle ms-50">تصدير</span>
@@ -245,9 +242,9 @@ const DataTablesBasic = () => {
                             </DropdownItem>
                         </DropdownMenu>
                     </UncontrolledButtonDropdown>
-                </div>
+                </div> */}
             </CardHeader>
-            <Row className="justify-content-end mx-0">
+            {/* <Row className="justify-content-end mx-0">
                 <InputGroup className="mb-2">
                     <InputGroupText>
                         <Search size={14} />
@@ -258,11 +255,11 @@ const DataTablesBasic = () => {
                         onChange={handleFilter}
                         id="search-input"
                         value={searchValue}
-                        disabled={store.cuttingOutput == ""}
+                        disabled={store.InputLakeContent == ""}
                         placeholder="البحث ..."
                     />
                 </InputGroup>
-            </Row>
+            </Row> */}
             {isLoading ? ( // Show the loading spinner while isLoading is true
                 <div className="text-center my-3">
                     <div className="spinner-border text-primary" role="status">
@@ -274,7 +271,7 @@ const DataTablesBasic = () => {
                     <DataTable
                         noHeader
                         pagination
-                        data={searchValue.length ? searchData : store.warehouseDetails}
+                        data={searchValue.length ? searchData : store.InputLakeContent}
                         columns={columns}
                         className="react-dataTable"
                         expandableRows={true}

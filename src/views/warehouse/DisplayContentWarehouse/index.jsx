@@ -4,11 +4,12 @@ import { getWarehouseWithDetails, openDialog } from "../store";
 import { useEffect, useState } from "react";
 // ** Third Party Components
 import { Share, Grid, Search } from "react-feather";
-import DataTable from "react-data-table-component";
+import DataTable, { createTheme } from "react-data-table-component";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import EditDialogComponent from './EditDialog'
+import { ExpandedDataTable } from "./expandedTable.component";
 // ** Reactstrap Imports
 import {
     Card,
@@ -53,6 +54,7 @@ const DataTablesBasic = () => {
             sortable: false,
         },
 
+
         {
             name: "المادة",
             selector: (row) => row.out_put__type__production.type,
@@ -62,38 +64,30 @@ const DataTablesBasic = () => {
             name: "الوزن الكلي",
             selector: (row) => row.tot_weight,
         },
-        {
-            name: "الحد الادنى",
-            selector: row => {
-                if (!row.minimum)
-                    return (<div className='text-danger'>0</div>)
-                if (row.minimum)
-                    return (<div className='text-primary'>طلب شراء</div>)
 
-            }
-        },
         {
             name: "المخزون الاحتياطي",
             selector: row => {
                 if (!row.stockpile)
                     return (<div className='text-danger'>0</div>)
                 if (row.stockpile)
-                    return (<div className='text-primary'>طلب شراء</div>)
+                    return (<div className='text-primary'>{row.stockpile}</div>)
 
             }
         },
-        {
-            name: '',
-            cell: row => (
-                // <button  onClick={() => handleConfirmText(row.id)} className='btn-sm btn btn-danger'>
-                //   حذف المزرعة
-                // </button>
-                <div>
+        // {
+        //     name: '',
+        //     cell: row => (
+        //         // <button  onClick={() => handleConfirmText(row.id)} className='btn-sm btn btn-danger'>
+        //         //   حذف المزرعة
+        //         // </button>
+        //         <div>
 
-                    <button className='btn-sm btn btn-success' onClick={handleOpenDialog}>تعديل</button>
-                </div>
-            )
-        }
+        //             <button className='btn-sm btn btn-success' onClick={handleOpenDialog}>تعديل</button>
+        //         </div>
+        //     )
+        // }
+
         // {
         //   name: "الكمية الكلية",
         //   selector: (row) => row.total_amount,
@@ -101,13 +95,17 @@ const DataTablesBasic = () => {
     ];
     const columns2 = [
         {
-            name: "البراد الصفري",
-            selector: (row) => row.zero_frige.weight,
+            name: "",
+            cell: (row) =>
+                <div>
+                    sssss
+                </div>
+
         },
-        {
-            name: "البحرات",
-            selector: (row) => row.lake.weight,
-        },
+        // {
+        //     name: "البحرات",
+        //     selector: (row) => row.amount,
+        // },
 
     ];
 
@@ -162,7 +160,7 @@ const DataTablesBasic = () => {
                     return false;
                 }
             });
-            setsearchData(updatedData);
+            setfilterdData(updatedData);
             setSearchValue(value);
         }
     };
@@ -170,7 +168,7 @@ const DataTablesBasic = () => {
     const store = useSelector((state) => state.warehouse);
 
     const [searchValue, setSearchValue] = useState("");
-    const [searchData, setsearchData] = useState([]);
+    const [filterdData, setfilterdData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [showNoDataMessage, setShowNoDataMessage] = useState(false);
     const dispatch = useDispatch();
@@ -180,17 +178,6 @@ const DataTablesBasic = () => {
         console.log('trueeee')
         dispatch(openDialog());
     };
-    const ExpandedComponent = ({ data }) => (
-        <div>
-            <DataTable
-                customStyles={customStyles}
-                data={store.warehouseDetails}
-                columns={columns2}
-                className="react-dataTable"
-                noHeader
-            />
-        </div>
-    );
 
     useEffect(() => {
         dispatch(getWarehouseWithDetails());
@@ -221,7 +208,7 @@ const DataTablesBasic = () => {
     }, [isLoading, hasData]);
 
     const hasData = searchValue.length
-        ? searchData.length > 0
+        ? filterdData.length > 0
         : store.warehouseDetails.length > 0;
 
     return (
@@ -230,22 +217,22 @@ const DataTablesBasic = () => {
                 <CardTitle>
                     {" "}
                     <h2>
-                        مخرجات قسم التقطيع
+                        محتويات المخازن
                         <br />
                         <br />
                         <h3 className="text-success">
                             {" "}
                             {store.cuttingOutput == ""
                                 ? null
-                                : `عدد المخرجات : ${searchValue.length
-                                    ? searchData.length
+                                : `عدد المحتويات : ${searchValue.length
+                                    ? filterdData.length
                                     : store.cuttingOutput.length
                                 }`}
                         </h3>
                     </h2>{" "}
                 </CardTitle>
 
-                <div className="d-flex mt-md-0 mt-1">
+                {/* <div className="d-flex mt-md-0 mt-1">
                     <UncontrolledButtonDropdown>
                         <DropdownToggle
                             color="secondary"
@@ -263,9 +250,9 @@ const DataTablesBasic = () => {
                             </DropdownItem>
                         </DropdownMenu>
                     </UncontrolledButtonDropdown>
-                </div>
+                </div> */}
             </CardHeader>
-            <Row className="justify-content-end mx-0">
+            {/* <Row className="justify-content-end mx-0">
                 <InputGroup className="mb-2">
                     <InputGroupText>
                         <Search size={14} />
@@ -280,7 +267,7 @@ const DataTablesBasic = () => {
                         placeholder="البحث ..."
                     />
                 </InputGroup>
-            </Row>
+            </Row> */}
             {isLoading ? ( // Show the loading spinner while isLoading is true
                 <div className="text-center my-3">
                     <div className="spinner-border text-primary" role="status">
@@ -292,11 +279,11 @@ const DataTablesBasic = () => {
                     <DataTable
                         noHeader
                         pagination
-                        data={searchValue.length ? searchData : store.warehouseDetails}
+                        data={store.warehouseDetails}
                         columns={columns}
                         className="react-dataTable"
                         expandableRows={true}
-                        expandableRowsComponent={ExpandedComponent}
+                        expandableRowsComponent={ExpandedDataTable}
                         expandOnRowClicked={false}
                         expandOnRowDoubleClicked={false}
                         expandableRowsHideExpander={false}

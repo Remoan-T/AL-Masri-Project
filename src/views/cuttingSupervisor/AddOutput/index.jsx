@@ -91,16 +91,16 @@ function DynamicFields() {
   };
 
   return (
-    <div>
+    <div className="pt-4">
       <Card className="mx-5 px-2">
-        <CardBody>
+        <CardBody >
           <Form onSubmit={handleSubmit(onSubmit)}>
 
 
             <div className="divider">
               <div className="divider-text">
                 <b className="text-primary h1">
-                طلب ovh
+                إضافة خرج
                 </b>
               </div>
             </div>
@@ -110,7 +110,7 @@ function DynamicFields() {
               fields.map((field, index) => (
                 
 
-                <Row key={index} className="justify-content-between align-items-center">
+                <Row key={index} className="justify-content-between align-items-center pt-1">
            
                   <Col md={4} className="mb-md-0 mb-1">
                     <Label className="form-label">النوع</Label>

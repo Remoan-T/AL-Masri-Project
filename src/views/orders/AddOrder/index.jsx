@@ -34,15 +34,15 @@ import "@styles/react/libs/react-select/_react-select.scss";
 
 function DynamicFields() {
 
-    
 
 
-  const {  handleSubmit, control } = useForm({
+
+  const { handleSubmit, control } = useForm({
     defaultValues: {
       selling_port_id: "",
       details: [{ amount: "", type: "" }],
     }
-    
+
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -86,28 +86,19 @@ function DynamicFields() {
   const handleCheckboxChange = (event) => {
     setIsChecked(event.target.checked);
     setisRequest(isRequest === 0 ? 1 : 0)
-  
+
   };
 
-  const onSubmit = async (data) => { data.details.map(async (el)=> {
-     for (let el of data.details) {
-        if (el.amount < 0 || el.amount.toString().length > 5 ) {
-        toast(t => {
-            return <ToastError t={t} err={'يرجى التأكد من الكمية المدخلة !!'} />;
-          });
-          return;
-        }
-      }
+  const onSubmit = async (data) => {
 
-
-  if(data.selling_port_id.value && data.details != '' && el.amount > 0 && el.amount.toString().length <= 5){try {
+    try {
       const res = await axios.post(
         "http://127.0.0.1:8000/sales-api/add-requset-sales-purchasing",
         {
           request_type: isRequest,
           selling_port_id: (isRequest == 1 ? data.selling_port_id.value : null),
           details: data.details,
-          farm_id : (isRequest == 0 ? data.selling_port_id.value : null)
+          farm_id: (isRequest == 0 ? data.selling_port_id.value : null)
         },
         {
           headers: {
@@ -116,34 +107,33 @@ function DynamicFields() {
           },
         }
       );
-      
-      if(!res.data.errNum)
-      toast(t => (
-        <ToastDone position="top-right" t={t} msg={res.data.message} />
-      ))
 
-      console.log(res);
-      console.log(el.amount.toString().length)
+      if (!res.data.errNum)
+        toast(t => (
+          <ToastDone position="top-right" t={t} msg={res.data.message} />
+        ))
+
+      // console.log(res);
     } catch (error) {
-        if (error.code == 'ERR_NETWORK') toast(t => (
-            <ToastError t={t} err={'  مشكلة بالاتصال بقاعدة البيانات !!'} />
-          ))
-        if (error.code == 'ERR_BAD_REQUEST' && error.response.data.message == 'The given data was invalid.') toast(t => (
-            <ToastError t={t} err={'الرجاء ملئ كامل البيانات بشكل صحيح !!'} />
-          ))
+      if (error.code == 'ERR_NETWORK') toast(t => (
+        <ToastError t={t} err={'  مشكلة بالاتصال بقاعدة البيانات !!'} />
+      ))
+      if (error.code == 'ERR_BAD_REQUEST' && error.response.data.message == 'The given data was invalid.') toast(t => (
+        <ToastError t={t} err={'الرجاء ملئ كامل البيانات بشكل صحيح !!'} />
+      ))
       console.log(error);
     }
 
-}
 
 
 
-})
 
-    if(!data.selling_port_id || data.details == '' )toast(t => (
-        <ToastError t={t} err={'الرجاء ملئ كامل بيانات الطلب بشكل صحيح'} />
-      ))
- 
+
+
+    if (!data.selling_port_id || data.details == '') toast(t => (
+      <ToastError t={t} err={'الرجاء ملئ كامل بيانات الطلب بشكل صحيح'} />
+    ))
+
 
   };
 
@@ -211,7 +201,7 @@ function DynamicFields() {
 
             {isChecked &&
               fields.map((field, index) => (
-                
+
 
                 <Row key={index} className="justify-content-between align-items-center">
                   <Col md={4} className="mb-md-0 mb-1">
@@ -221,22 +211,22 @@ function DynamicFields() {
                       control={control}
                       defaultValue={field.amount}
                       required
-                      render={({ field  }) => (
+                      render={({ field }) => (
                         <Input
                           required
                           type="number"
                           placeholder="الكمية بال كغ"
                           {...field}
-                    
-                          id={`details.${index}.amount`}
-                  
 
-                          
+                          id={`details.${index}.amount`}
+
+
+
                         />
-  
-            
+
+
                       )}
-                      
+
                     />
 
 
@@ -286,6 +276,7 @@ function DynamicFields() {
                       className="text-nowrap px-1"
                       type="button"
                       onClick={() => remove(index)}
+                      style={{ display: `${index == 0 ? 'none' : ''}` }}
                       outline
                     >
                       <X size={14} className="me-50" />
@@ -339,11 +330,11 @@ function DynamicFields() {
                         name={`details.${index}.amount`}
                         control={control}
                         defaultValue={field.amount}
-                        render={({ field}) => (
+                        render={({ field }) => (
                           <Input
-                          required
-                          type="number"   
-                          placeholder="الكمية بال كغ"                    
+                            required
+                            type="number"
+                            placeholder="الكمية بال كغ"
                             {...field}
                             id={`details.${index}.amount`}
                           />
@@ -381,8 +372,8 @@ function DynamicFields() {
                             }}
                             value={buy.find((option) => option.value === value)}
                             options={Sale.map((option) => ({
-                              value: option.name,
-                              label: option.name,
+                              value: option.type,
+                              label: option.type,
                             }))}
                           />
                         )}
@@ -394,6 +385,7 @@ function DynamicFields() {
                         className="text-nowrap px-1"
                         type="button"
                         onClick={() => remove(index)}
+                        style={{ display: `${index == 0 ? 'none' : ''}` }}
                         outline
                       >
                         <X size={14} className="me-50" />

@@ -1,15 +1,17 @@
 // ** Table Columns
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { getOfferFarms, removeFarm } from '../store'
+import { customExpStyles } from "../../../assets/datatable/expandedStyles";
+import { getOfferFarms } from "../store";
 import { Fragment } from "react";
 import { useEffect, useState } from "react";
-import toast from 'react-hot-toast'
-import ToastDone from '@src/assets/toast/toastDone.component'
-import ToastError from '@src/assets/toast/toastError.component'
+import { renderModalCell } from "./modal.component";
+import toast from "react-hot-toast";
+import ToastDone from "@src/assets/toast/toastDone.component";
+import ToastError from "@src/assets/toast/toastError.component";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 // ** Third Party Components
-import { ChevronDown, Share, Grid, Search } from "react-feather";
+import { ChevronDown, Share, Grid, Search, Check } from "react-feather";
 import DataTable from "react-data-table-component";
 
 //styles
@@ -43,39 +45,28 @@ import {
   ModalFooter,
   Form,
   FormGroup,
-  Col
-
+  Col,
 } from "reactstrap";
 
 const MySwal = withReactContent(Swal);
 
 const DataTablesBasic = () => {
-
-
-
-
-
-
   const { handleSubmit, control } = useForm({
     // defaultValues: {
     //   selling_port_id: "",
     //   details: [{ amount: "", type: "" }],
     // }
-
   });
-
 
   const { fields, append, remove } = useFieldArray({
     control,
-
   });
-
 
   const [searchValue, setSearchValue] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showNoDataMessage, setShowNoDataMessage] = useState(false);
-  const [formModal, setFormModal] = useState(false)
+
   const [isChecked, setIsChecked] = useState(false);
   const [numberInputValue, setNumberInputValue] = useState(0);
 
@@ -85,25 +76,47 @@ const DataTablesBasic = () => {
       selector: (row, index) => index + 1,
       sortable: false,
     },
-
     {
-      name: 'اسم المزرعة',
-      selector: row => row.farm.name
+      name: "اسم المزرعة",
+      selector: (row) => row.farm.name,
     },
     {
-      name: 'الوزن الكلي',
-      selector: 'total_amount'
+      name: "الوزن الكلي",
+      selector: (row) => row.total_amount,
     },
     ,
     {
-      name: 'التاريخ',
-      selector: 'created_at'
+      name: "التاريخ",
+      selector: (row) => row.created_at,
     },
     {
-      name: "Actions",
       selector: (row, index) => renderModalCell(row, index),
     },
   ];
+
+  const columns2 = [
+    {
+      name: "النوع",
+      selector: (row) => row.type,
+    },
+    {
+      name: "الكمية",
+      selector: (row) => row.amount,
+    },
+  ];
+
+  const ExpandedComponent = ({ data }) => (
+    <div>
+      <DataTable
+        customStyles={customExpStyles}
+        data={data.detailpurchase_orders}
+        columns={columns2}
+        className="react-dataTable"
+        noHeader
+      />
+    </div>
+  );
+
   const store = useSelector((state) => state.farm);
 
   const dispatch = useDispatch();
@@ -135,151 +148,22 @@ const DataTablesBasic = () => {
     };
   }, [isLoading, hasData]);
 
-  useEffect(() => {
-
-    setFormModal(Array(store.OfferFarms.length).fill(false));
-  }, [store.OfferFarms]);
-
-
-  const handleModalToggle = (index) => {
-    const updatedFormModal = [...formModal];
-    updatedFormModal[index] = !updatedFormModal[index];
-    setFormModal(updatedFormModal);
-  };
-
-
-  const renderModalCell = (row, index) => {
-    const orders = row.detailpurchase_orders;
-
-    const [checkboxValues, setCheckboxValues] = useState(
-      orders.map((order) => order.type)
-    );
-    const [numberInputValue, setNumberInputValue] = useState(
-      Array(orders.length).fill(0)
-    );
-
-    const handleCheckboxChange = (e, orderIndex) => {
-      const updatedValues = [...checkboxValues];
-      updatedValues[orderIndex] = e.target.checked ? orders[orderIndex].type : "";
-      setCheckboxValues(updatedValues);
-
-      if (e.target.checked) {
-        console.log(orders[orderIndex].type);
-      }
-    };
-
-    const handleNumberInputChange = (e, orderIndex) => {
-      const updatedValues = [...numberInputValue];
-      updatedValues[orderIndex] = e.target.value;
-      setNumberInputValue(updatedValues);
-    };
-    const modalSubmit = async (data) => {
-
-      // handleModalToggle(index)
-
-    };
-
-    return (
-      <div>
-        <Button
-          color="primary"
-          outline
-          onClick={() => handleModalToggle(index)}
-        >
-          Login Form
-        </Button>
-        <Modal
-          isOpen={formModal[index]}
-          toggle={() => handleModalToggle(index)}
-          className="modal-dialog-centered"
-          size="lg"
-        >
-          <Form>
-            <ModalHeader toggle={() => handleModalToggle(index)}>
-              طلب من العرض
-            </ModalHeader>
-            <ModalBody>
-
-              {orders.map((order, orderIndex) => {
-
-                return (
-                  <Fragment>
-                    <Row key={orderIndex}>
-                      <Col md={6}>
-                        <FormGroup check className="py-1">
-                          <Label check>
-                            <Input
-                              type="checkbox"
-                              checked={checkboxValues[orderIndex] === order.type}
-                              onChange={(e) => handleCheckboxChange(e, orderIndex)}
-                            />
-                            {order.type}
-                          </Label>
-                        </FormGroup>
-                      </Col>
-                      <Col md={6}>
-                        <FormGroup className="mb-0">
-                          <Label className="form-label">الكمية</Label>
-                          <Controller
-                            name={`details.amount`}
-                            control={control}
-                            rules={{ required: true }}
-                            // defaultValue={field.weight}
-                            render={({ field }) => (
-                              <Input
-                                disabled={!checkboxValues[orderIndex]}
-                                type="number"
-                                placeholder="الكمية بال كغ"
-                                {...field}
-
-                                id={`details.${index}.weight`}
-
-
-
-                              />
-
-
-                            )}
-
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                  </Fragment>
-
-                )
-              })}
-
-            </ModalBody>
-            <ModalFooter>
-              <Button color="primary" onClick={() => modalSubmit()}>
-                إرسال الطلب
-              </Button>{" "}
-
-            </ModalFooter>
-          </Form>
-        </Modal>
-
-      </div>
-    );
-  };
-
-
-
+  // const handleModalToggle = (index) => {
+  //   const updatedFormModal = [...formModal];
+  //   updatedFormModal[index] = !updatedFormModal[index];
+  //   setFormModal(updatedFormModal);
+  // };
 
   const handleExport = () => {
     const fileType =
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
     const fileExtension = ".xlsx";
-    const fileName = "المنافذ المحذوفة";
+    const fileName = "عروض المزارع";
     const formattedData = store.OfferFarms.map(
-      ({ id, name, location, mobile_number, type, owner }) => ({
-        المعرف: id,
-        الاسم: name,
-        المكان: location,
-        النوع: type,
-        رقم_الهاتف: mobile_number,
-        المالك: owner,
+      ({ farm, created_at, total_amount }) => ({
+        اسم_المزرعة: farm.name,
+        الوزن_الكلي: total_amount,
+        التاريخ: created_at,
       })
     );
     const ws = XLSX.utils.json_to_sheet(formattedData);
@@ -297,18 +181,14 @@ const DataTablesBasic = () => {
     if (value.length) {
       updatedData = store.OfferFarms.filter((item) => {
         const startsWith =
-          item.name.toLowerCase().startsWith(value.toLowerCase()) ||
-          item.type.toLowerCase().startsWith(value.toLowerCase()) ||
-          item.mobile_number.toString().startsWith(value) ||
-          item.owner.toLowerCase().startsWith(value.toLowerCase()) ||
-          item.location.toString().startsWith(value.toLowerCase());
+          item.created_at.toLowerCase().startsWith(value.toLowerCase()) ||
+          item.farm.name.toLowerCase().startsWith(value.toLowerCase()) ||
+          item.total_amount.toString().startsWith(value);
 
         const includes =
-          item.name.toLowerCase().includes(value.toLowerCase()) ||
-          item.type.toLowerCase().includes(value.toLowerCase()) ||
-          item.mobile_number.toString().includes(value) ||
-          item.owner.toLowerCase().includes(value.toLowerCase()) ||
-          item.location.toString().includes(value.toLowerCase());
+          item.created_at.toLowerCase().includes(value.toLowerCase()) ||
+          item.farm.name.toLowerCase().includes(value.toLowerCase()) ||
+          item.total_amount.toString().includes(value);
 
         if (startsWith) {
           return startsWith;
@@ -346,18 +226,13 @@ const DataTablesBasic = () => {
     ? filteredData.length > 0
     : store.OfferFarms.length > 0;
 
-
-
-
   return (
     <Fragment>
       {/* table rendering code... */}
       {columns.map((column, columnIndex) => {
         if (column.selector === "Actions") {
           return (
-            <div key={columnIndex}>
-              {renderModalCell(row, columnIndex)}
-            </div>
+            <div key={columnIndex}>{renderModalCell(row, columnIndex)}</div>
           );
         }
         return null;
@@ -367,19 +242,20 @@ const DataTablesBasic = () => {
           <CardTitle>
             {" "}
             <h2>
-              منافذ البيع المحذوفة
+              عروض المزارع
               <br />
               <br />
-              <h3 className="text-danger">
-                {" "}
-                {store.OfferFarms == ""
-                  ? null
-                  : `عدد المنافذ المحذوفة : ${searchValue.length
-                    ? filteredData.length
-                    : store.OfferFarms.length
+            </h2>
+            <h3 className="text-danger">
+              {" "}
+              {store.OfferFarms == ""
+                ? null
+                : `عدد العروض : ${
+                    searchValue.length
+                      ? filteredData.length
+                      : store.OfferFarms.length
                   }`}
-              </h3>
-            </h2>{" "}
+            </h3>
           </CardTitle>
           <div className="d-flex mt-md-0 mt-1">
             <UncontrolledButtonDropdown>
@@ -387,7 +263,7 @@ const DataTablesBasic = () => {
                 color="secondary"
                 caret
                 outline
-                disabled={store.deletedSelling == ""}
+                disabled={store.OfferFarms == ""}
               >
                 <Share size={15} />
                 <span className="align-middle ms-50">تصدير</span>
@@ -412,7 +288,7 @@ const DataTablesBasic = () => {
               onChange={handleFilter}
               id="search-input"
               value={searchValue}
-              disabled={store.deletedSelling == ""}
+              disabled={store.OfferFarms == ""}
               placeholder="البحث ..."
             />
           </InputGroup>
@@ -432,6 +308,11 @@ const DataTablesBasic = () => {
               columns={columns}
               className="react-dataTable"
               sortIcon={<ChevronDown size={10} />}
+              expandableRows={true}
+              expandableRowsComponent={ExpandedComponent}
+              expandOnRowClicked={false}
+              expandOnRowDoubleClicked={false}
+              expandableRowsHideExpander={false}
               paginationRowsPerPageOptions={[10, 25, 50, 100]}
             />
           </div>
@@ -440,9 +321,7 @@ const DataTablesBasic = () => {
         ) : null}
       </Card>
     </Fragment>
-
   );
-
 };
 
 export default DataTablesBasic;

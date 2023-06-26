@@ -61,11 +61,11 @@ function DynamicFields() {
             Authorization: `Bearer ${localStorage.accessToken}`
           }
         })
-        if (res.data.errNum)
+        if (res.data.status == false)
           toast(t => (
             <ToastError position="top-right" t={t} err={res.data.msg} />
           ))
-        if (!res.data.errNum)
+        if (res.data.status == true)
           toast(t => (
             <ToastDone position="top-right" t={t} msg={res.data.message} />
           ))

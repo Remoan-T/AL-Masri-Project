@@ -23,6 +23,9 @@ import TrucksRoutes from './trucks'
 import slaughterRoutes from './slaughter_supervisor'
 import cuttingRoutes from './cutting_supervisor'
 import WarehouseRoutes from './warehouse'
+import frigesRoutes from './friges'
+import ultimateStoreRoutes from './ultimate store'
+
 // ** Layouts
 import BlankLayout from '@layouts/BlankLayout'
 import VerticalLayout from '@src/layouts/VerticalLayout'
@@ -32,10 +35,12 @@ import LayoutWrapper from '@src/@core/layouts/components/layout-wrapper'
 // ** Route Components
 import PublicRoute from '@components/routes/PublicRoute'
 import PrivateRoute from '@components/routes/PrivateRoute'
-
+import manufacturingRoutes from './Manufacturing_Supervisor'
+import CEORoutes from './ceo'
 // ** Utils
 import { isObjEmpty } from '@utils'
 import SellingPortRoutes from './SellingPort'
+import productionRoutes from './Productions'
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -58,6 +63,7 @@ const Routes = [
   ...SellingPortRoutes,
   ...NotesRoutes,
   ...AppRoutes,
+  ...productionRoutes,
   ...StatmentRoutes,
   ...PagesRoutes,
   ...UiElementRoutes,
@@ -71,7 +77,11 @@ const Routes = [
   ...TrucksRoutes,
   ...DriversRoutes,
   ...slaughterRoutes,
-  ...cuttingRoutes
+  ...cuttingRoutes,
+  ...ultimateStoreRoutes,
+  ...frigesRoutes,
+  ...manufacturingRoutes,
+  ...CEORoutes
 
 ]
 

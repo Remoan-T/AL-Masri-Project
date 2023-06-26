@@ -64,7 +64,8 @@ const ToastError = ({ t, errName }) => {
       <div className='d-flex flex-column text-danger'>
         <div className='d-flex justify-content-between'>
           {(errName =='ERR_NETWORK') &&<h4 className='text-danger'> <b>قاعدة البيانات غير متصلة !!</b> </h4>}
-          {(errName !='ERR_NETWORK') &&<h4 className='text-danger'><b>اسم المستخدم أو كلمة المرور خطأ !!</b></h4>}
+          {(errName =='LoginError') &&<h4 className='text-danger'><b>اسم المستخدم أو كلمة المرور خطأ !!</b></h4>}
+          {(errName !='LoginError' && errName !='ERR_NETWORK' ) &&<h4 className='text-danger'><b>{errName}</b></h4>}
           <X size={12} className='cursor-pointer' onClick={() => toast.dismiss(t.id)} />
         </div>
       {/* sometext */}
@@ -106,10 +107,18 @@ const Login = () => {
       })
       
 
-
-      res.data.error && toast(t => (
+// console.log(res)
+       if(res.data.error){ toast(t => (
         <ToastError t={t}  errName={'LoginError'} />
       ))
+    return null
+    }
+
+      if(res.data.message ) { toast(t => (
+        <ToastError t={t}  errName={res.data.message} />
+      ))
+    return null
+    }
 
   
       dispatch(handleLogin(res.data))

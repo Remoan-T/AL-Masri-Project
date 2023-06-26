@@ -68,6 +68,30 @@ export const authSlice = createSlice({
           }
         ]
       }
+      else if (managingLevel1 == 'Manufacturing_Supervisor') {
+        ability1 = [
+          {
+            action: 'manage',
+            subject: 'ms'
+          }
+        ]
+      }
+      else if (managingLevel1 == 'Production_Manager') {
+        ability1 = [
+          {
+            action: 'manage',
+            subject: 'pm'
+          }
+        ]
+      }
+      else if (managingLevel1 == 'ceo') {
+        ability1 = [
+          {
+            action: 'manage',
+            subject: 'CEO'
+          }
+        ]
+      }
       else {
         ability1 = [
           {
@@ -84,7 +108,7 @@ export const authSlice = createSlice({
 
       localStorage.setItem('userData', JSON.stringify(action.payload))
       localStorage.setItem('accessToken', (action.payload.token))
-      console.log(action.payload.token)
+      // console.log(action.payload.token)
       localStorage.setItem('managing_level', JSON.stringify(action.payload.managing_level))
       localStorage.setItem('ability', JSON.stringify(ability1))
       // localStorage.setItem(config.storageRefreshTokenKeyName, JSON.stringify(action.payload.refreshToken))
@@ -95,8 +119,12 @@ export const authSlice = createSlice({
       // state[config.storageTokenKeyName] = null
       // state[config.storageRefreshTokenKeyName] = null
       // ** Remove user, accessToken & refreshToken from localStorage
+
       localStorage.removeItem('userData')
       localStorage.removeItem('accessToken')
+      localStorage.removeItem('managing_level')
+      localStorage.removeItem('ability')
+
       // localStorage.removeItem(config.storageRefreshTokenKeyName)
     }
   }

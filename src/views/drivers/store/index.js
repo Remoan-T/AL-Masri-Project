@@ -15,6 +15,7 @@ export const getDriversData = createAsyncThunk('appfarm/getDriversData', async (
 
         }
     })
+    console.log(response.data)
     // response.data.map(fm => console.log(fm))
     return {
         data: response.data

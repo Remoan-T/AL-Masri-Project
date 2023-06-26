@@ -74,7 +74,7 @@ const DataTablesBasic = () => {
     },
     {
       name: "الوزن",
-      selector: (row) => row.weight,
+      selector: (row) => `${row.weight} كغ`,
     },
   ];
 
@@ -112,18 +112,19 @@ const DataTablesBasic = () => {
     setSearchValue(value);
 
     if (value.length) {
-      updatedData = store.SellingPortOffer.filter((item) => {
+      updatedData = store.cuttingOutput.filter((item) => {
         const startsWithPort =
-          item.selling_port &&
-          item.selling_port.name.toLowerCase().startsWith(value.toLowerCase());
+        
+        item.created_at.toLowerCase().startsWith(value.toLowerCase());
+
+
         const includesPort =
-          item.selling_port &&
-          item.selling_port.name.toLowerCase().includes(value.toLowerCase());
 
-        const otherStart = item.total_amount.toString().startsWith(value);
-        const otherIncludes = item.total_amount.toString().includes(value);
+        item.created_at.toLowerCase().includes(value.toLowerCase());
 
-        if (startsWithPort || includesPort || otherStart || otherIncludes) {
+      
+
+        if (startsWithPort || includesPort ) {
           return true;
         } else {
           return false;
@@ -192,6 +193,7 @@ const DataTablesBasic = () => {
           {" "}
           <h2>
             مخرجات قسم التقطيع
+            </h2>
             <br />
             <br />
             <h3 className="text-success">
@@ -204,10 +206,10 @@ const DataTablesBasic = () => {
                       : store.cuttingOutput.length
                   }`}
             </h3>
-          </h2>{" "}
+          
         </CardTitle>
 
-        <div className="d-flex mt-md-0 mt-1">
+        {/* <div className="d-flex mt-md-0 mt-1">
           <UncontrolledButtonDropdown>
             <DropdownToggle
               color="secondary"
@@ -225,7 +227,7 @@ const DataTablesBasic = () => {
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledButtonDropdown>
-        </div>
+        </div> */}
       </CardHeader>
       <Row className="justify-content-end mx-0">
         <InputGroup className="mb-2">

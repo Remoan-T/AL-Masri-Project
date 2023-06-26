@@ -27,15 +27,15 @@ import {
     ModalFooter,
     InputGroupText
 } from 'reactstrap'
-const EditDialogComponent = () => {
+const EditDialogComponent = (data) => {
 
     const isOpen = useSelector((state) => state.warehouse.isOpen);
     console.log("🚀 ~ file: EditDialog.jsx:7 ~ EditDialogComponent ~ store.isOpen:", isOpen)
     const dispatch = useDispatch();
     const defaultValues = {
 
-        tot_weight: '',
-        empty_weight: '',
+        stockpile: '',
+        minimum: '',
 
     }
 
@@ -58,12 +58,13 @@ const EditDialogComponent = () => {
     const handleCloseDialog = () => {
         dispatch(closeDialog());
     };
-    const onSubmit = async (data) => {
+    const onSubmit = async (values) => {
+        console.log("🚀 ~ file: EditDialog.jsx:63 ~ onSubmit ~ data:", values)
 
         try {
-            const res = await axios.post(`http://127.0.0.1:8000/libra-api/add-weight-after-arrival-detection/${id}`, {
-                tot_weight: data.tot_weight,
-                empty_weight: data.empty_weight,
+            const res = await axios.post(`http://127.0.0.1:8000/warehouse-supervisor-api/edit-warehouse-row-info/1`, {
+                stockpile: values.stockpile,
+                minimum: values.minimum,
 
             }, {
                 headers: {
@@ -109,14 +110,14 @@ const EditDialogComponent = () => {
                     </ModalHeader>
                     <ModalBody>
 
-                        <Form >
+                        <Form onSubmit={handleSubmit(onSubmit)} >
                             <Row>
                                 <Col sm='12'>
                                     <Label className='form-label' for='IconsMobile'>
-                                        الحد الادنى                </Label>
+                                        المخزون الاحتياطي                </Label>
                                     <InputGroup className='input-group-merge mb-1'>
                                         <Controller
-                                            name='tot_weight'
+                                            name='stockpile'
                                             control={control}
                                             rules={{
                                                 required: true,
@@ -132,7 +133,7 @@ const EditDialogComponent = () => {
                                             render={({ field }) => (
                                                 <Input
                                                     type='number'
-                                                    id='tot_weight'
+                                                    id='stockpile'
                                                     placeholder='ادخل الحد الادنى'
                                                     required
                                                     {...field}
@@ -144,11 +145,11 @@ const EditDialogComponent = () => {
 
                                 <Col sm='12'>
                                     <Label className='form-label' for='IconsPassword'>
-                                        المخزون الاحتياطي
+                                        الحد الادنى
                                     </Label>
                                     <InputGroup className='input-group-merge mb-1'>
                                         <Controller
-                                            name='empty_weight'
+                                            name='minimum'
                                             rules={{ required: true }}
                                             control={control}
                                             render={({ field }) => (
@@ -157,7 +158,7 @@ const EditDialogComponent = () => {
                                                     required
                                                     maxLength={10}
                                                     minLength={3}
-                                                    id='empty_weight'
+                                                    id='minimum'
                                                     {...field}
                                                 />)}
                                         />
@@ -169,7 +170,7 @@ const EditDialogComponent = () => {
                         </Form>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={() => modalSubmit()}>
+                        <Button color="primary" type='submit'>
                             إرسال الطلب
                         </Button>
 

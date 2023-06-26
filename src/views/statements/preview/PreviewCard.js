@@ -14,7 +14,7 @@ const PreviewCard = ({ data }) => {
       const statement = data.find((statement) => statement.id === Number(id));
       setSingleStatement(statement);
       setLoading(false);
-    }, 1500);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, [data, id]);

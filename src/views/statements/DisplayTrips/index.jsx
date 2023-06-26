@@ -51,16 +51,24 @@ const DataTablesBasic = () => {
             name: '#', selector: (row, index) => index + 1, sortable: false
         },
         {
+            name: 'رقم الشاحنة',
+            selector: row => row.truck.truck_number
+        },
+        {
             name: 'اسم السائق',
             selector: row => row.driver.name
+        },
+        {
+            name: 'التاريخ الانطلاق',
+            selector: row => row.created_at
         },
         {
             name: 'الوزن الكلي',
             selector: row => row.requset1.total_amount
         },
         {
-            name: 'التاريخ',
-            selector: row => row.created_at
+            name: 'اسم المزرعة',
+            selector: row => row.requset1?.farm?.name
         },
         {
             name: '',
@@ -70,7 +78,7 @@ const DataTablesBasic = () => {
                 // </button>
                 <div>
 
-                    <a href={`/statements/AddShipmentWeight/${row.id}`}>وزن شحنة بعد الوصول</a>
+                    <a href={`/statements/AddReceiptStatement/${row.id}`}>اضافة كشف استلام</a>
                 </div>
             )
         }
@@ -86,21 +94,38 @@ const DataTablesBasic = () => {
         dispatch(getTrips())
     }, [dispatch, store.trips.length])
 
-
+    const columns2 = [
+        {
+            name: "النوع",
+            selector: (row) => row.type,
+        },
+        {
+            name: "الكمية",
+            selector: (row) => row.amount,
+        },
+    ];
+    const ExpandedComponent = ({ data }) => (
+        <div>
+            <DataTable
+                data={data.requset1.sales_purchasing_requset_detail}
+                columns={columns2}
+                className="react-dataTable"
+                noHeader
+            />
+        </div>
+    );
 
 
     const handleExport = () => {
         const fileType =
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
         const fileExtension = ".xlsx";
-        const fileName = "الكشوف المتوفرة";
-        const formattedData = store.AvailableFarms.map(
-            ({ id, name, location, mobile_number, owner }) => ({
-                المعرف: id,
-                الاسم: name,
-                العنوان: location,
-                الهاتف: mobile_number,
-                المالك: owner,
+        const fileName = "الرحلات المتوفرة";
+        const formattedData = store.trips.map(
+            ({ driver, requset1, created_at }) => ({
+                اسم_السائق: driver.name,
+                الوزن_الكلي: requset1.total_amount,
+                التاريخ: created_at,
 
 
             })
@@ -120,20 +145,19 @@ const DataTablesBasic = () => {
         setSearchValue(value);
 
         if (value.length) {
-            updatedData = store.AvailableFarms.filter((item) => {
+            updatedData = store.trips.filter((item) => {
                 const startsWith =
-                    item.name.toLowerCase().startsWith(value.toLowerCase()) ||
-                    item.location.toLowerCase().startsWith(value.toLowerCase()) ||
-                    item.mobile_number.toString().startsWith(value) ||
-                    item.owner.toLowerCase().startsWith(value.toLowerCase())
+                    item.driver.name.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.requset1.total_amount.toString().toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.created_at.toString().startsWith(value)
+
 
 
 
                 const includes =
-                    item.name.toLowerCase().includes(value.toLowerCase()) ||
-                    item.location.toLowerCase().includes(value.toLowerCase()) ||
-                    item.mobile_number.toString().includes(value) ||
-                    item.owner.toLowerCase().includes(value.toLowerCase())
+                    item.driver.name.toLowerCase().includes(value.toLowerCase()) ||
+                    item.requset1.total_amount.toString().toLowerCase().includes(value.toLowerCase()) ||
+                    item.created_at.toString().includes(value)
 
                 if (startsWith) {
                     return startsWith;
@@ -159,7 +183,7 @@ const DataTablesBasic = () => {
             <CardHeader>
                 <CardTitle >
                     {" "}
-                    <h2>الرحلات المتوفرة<br /><br /><h3 className="text-success">عدد الرحلات : {store.data.length}</h3></h2>{" "}
+                    <h2>الرحلات المتوفرة<br /><br /><h3 className="text-success">عدد الرحلات : {store.trips.length}</h3></h2>{" "}
                 </CardTitle>
                 <div className="d-flex mt-md-0 mt-1">
                     <UncontrolledButtonDropdown>
@@ -204,6 +228,11 @@ const DataTablesBasic = () => {
                     className='react-dataTable'
                     keyField='string'
                     sortIcon={<ChevronDown size={10} />}
+                    expandableRows={true}
+                    expandableRowsComponent={ExpandedComponent}
+                    expandOnRowClicked={false}
+                    expandOnRowDoubleClicked={false}
+                    expandableRowsHideExpander={false}
                     paginationRowsPerPageOptions={[10, 25, 50, 100]}
                 />
             </div>

@@ -5,6 +5,7 @@ import { useEffect ,useState,Fragment} from 'react'
 // ** Third Party Components
 import { ChevronDown ,Plus,Trash2} from 'react-feather'
 import DataTable from 'react-data-table-component'
+import AddBtn from '../../../assets/buttons/addBtn.component'
 
 //styles
 import '@styles/react/libs/tables/react-dataTable-component.scss'
@@ -28,24 +29,34 @@ const DataTablesBasic = () => {
         },
           {
               name: 'التفاصيل',
-              selector: row => row.detail
+              selector: (row ) => {
+                if(row.production_manager && row.sender == 'sales')
+                return <div>  <b className='text-primary'>{row.detail}</b></div>
+                if(row.production_manager && row.sender == 'production')
+                return <div> {row.detail} </div>
+              } 
           },
+        //   {
+        //       name: 'من',
+        //       selector: row => row.purchasing_manager_id
+        //   },
           {
-              name: 'من',
-              selector: row => row.purchasing_manager_id
+              name: 'المصدر/الوجهة',
+              selector: (row ) => {
+                if(row.production_manager && row.sender == 'sales')
+                return <div><b className='text-primary'>إلى</b> مدير الإنتاج السيد: {row.production_manager.first_name}</div>
+                if(row.production_manager && row.sender == 'production')
+                return <div><b className='text-success'>من</b> مدير الإنتاج السيد: {row.production_manager.first_name}</div>
+              } 
           },
-          {
-              name: 'الى',
-              selector: row => row.production_manager_id
-          },
-          {
+        //   {
               
-              cell: row => (
+        //       cell: row => (
 
-                  <Trash2  stroke='#ea5455' className='cursor-pointer' onClick={() => handleConfirmText(row.id)} />
+        //           <Trash2  stroke='#ea5455' className='cursor-pointer' onClick={() => handleConfirmText(row.id)} />
       
-              )
-          }
+        //       )
+        //   }
       ]
     const store = useSelector(state => state.notes)
     const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -82,18 +93,19 @@ const DataTablesBasic = () => {
       }
 
 
-    console.log(store.data)
+    // console.log(store.data)
     return (
         <Fragment>
         <Card className='overflow-hidden'>
             <CardHeader>
                 <CardTitle><h2>الملاحظات</h2></CardTitle>
-                <Col className='position-absolute end-0 px-3'>
+                {/* <Col className='position-absolute end-0 px-3'>
                 <Plus  className='cursor-pointer' onClick={() => toggleSidebar()}/>
                 إضافة ملاحظة
                 
                 
-                </Col>
+                </Col> */}
+                <AddBtn disc={'إضافة ملاحظة'} onClick={() => toggleSidebar()}/>
                 
             </CardHeader>
             <div className='react-dataTable'>

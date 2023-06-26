@@ -20,13 +20,14 @@ export const getCuttingInput = createAsyncThunk('cutting/getCuttingInput', async
 
 
 export const getCuttingOutput = createAsyncThunk('cutting/getCuttingOutput', async () => {
-    const response = await axios.get('http://127.0.0.1:8000/cutting-supervisor-api/display-output-cutting', {
+    const response = await axios.get('http://127.0.0.1:8000/api/display-output-cutting', {
         headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${localStorage.accessToken}`
 
         }
     })
+    console.log(response.data)
     return {
         cuttingOutput: response.data
     }

@@ -77,9 +77,9 @@ const NavbarSearch = () => {
 
   return (
     <NavItem className='nav-search' onClick={() => setNavbarSearch(true)}>
-      <NavLink className='nav-link-search'>
+      {/* <NavLink className='nav-link-search'>
         <Icon.Search className='ficon' />
-      </NavLink>
+      </NavLink> */}
       <div
         className={classnames('search-input', {
           open: navbarSearch === true

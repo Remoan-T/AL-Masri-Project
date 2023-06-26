@@ -50,7 +50,7 @@ const DataTablesBasic = () => {
     },
     {
       name: "الوزن",
-      selector: (row) => row.weight,
+      selector: (row) => `${row.weight} كغ`,
     },
     {
         name: '',
@@ -118,15 +118,13 @@ const DataTablesBasic = () => {
     const fileType =
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
     const fileExtension = ".xlsx";
-    const fileName = "المزارع المتوفرة";
+    const fileName = "كامل دخل التقطيع";
     const formattedData = store.totalInput.map(
-      ({ id, name, location, mobile_number, owner }) => ({
-        المعرف: id,
-        الاسم: name,
-        العنوان: location,
-        الهاتف: mobile_number,
-        المالك: owner,
-      })
+      ({ weight, type}) => ({
+        النوع: type,
+        الوزن: `${weight} كغ`,
+     
+     })
     );
     const ws = XLSX.utils.json_to_sheet(formattedData);
     const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
@@ -143,16 +141,12 @@ const DataTablesBasic = () => {
     if (value.length) {
       updatedData = store.totalInput.filter((item) => {
         const startsWith =
-          item.name.toLowerCase().startsWith(value.toLowerCase()) ||
-          item.location.toLowerCase().startsWith(value.toLowerCase()) ||
-          item.mobile_number.toString().startsWith(value) ||
-          item.owner.toLowerCase().startsWith(value.toLowerCase());
+        item.type.toLowerCase().startsWith(value.toLowerCase()) ||
+        item.weight.toString().startsWith(value) 
 
-        const includes =
-          item.name.toLowerCase().includes(value.toLowerCase()) ||
-          item.location.toLowerCase().includes(value.toLowerCase()) ||
-          item.mobile_number.toString().includes(value) ||
-          item.owner.toLowerCase().includes(value.toLowerCase());
+      const includes =
+      item.type.toLowerCase().includes(value.toLowerCase()) ||
+      item.weight.toString().includes(value) 
 
         if (startsWith) {
           return startsWith;
@@ -165,26 +159,7 @@ const DataTablesBasic = () => {
     }
   };
 
-  const handleConfirmText = (id) => {
-    return MySwal.fire({
-      title: "هل تريد حذف المزرعة ؟",
-      text: "",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "حذف المزرعة",
-      cancelButtonText: "إالغاء",
-      customClass: {
-        confirmButton: "btn btn-primary",
-        cancelButton: "btn btn-outline-danger ms-1",
-      },
-      buttonsStyling: false,
-    }).then(function (result) {
-      if (result.value) {
-        dispatch(removeFarm(id));
-        dispatch(gettotalInput());
-      }
-    });
-  };
+  
   const hasData = searchValue.length
     ? filteredData.length > 0
     : store.totalInput.length > 0;
@@ -195,19 +170,20 @@ const DataTablesBasic = () => {
         <CardTitle>
           {" "}
           <h2>
-            المزارع المتاحة
+           كامل الدخل
+           </h2>{" "}
             <br />
             <br />
             <h3 className="text-success">
               {store.totalInput == ""
                 ? null
-                : `عدد المزارع : ${
+                : `عدد المدخلات : ${
                     searchValue.length
                       ? filteredData.length
                       : store.totalInput.length
                   }`}
             </h3>
-          </h2>{" "}
+          
         </CardTitle>
         <div className="d-flex mt-md-0 mt-1">
           <UncontrolledButtonDropdown>

@@ -27,10 +27,10 @@ const slaughterRoutes = [
         element: <DisplayOutputs />,
         meta: {
             action: 'read',
-            resource: 'ss'
+            resource: ['ss', 'CEO', 'pm']
         }
     },
-   
+
 ]
 
 export default slaughterRoutes

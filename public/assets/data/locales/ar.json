@@ -1,4 +1,12 @@
-{
+{ "viewWarehousesContent":"عرض محتويات المخازن",
+  "DisplaySlaughterOutputs":"مخرجات قسم الدبح",
+  "Outputs":"مخرجات كل الأقسام",
+  "Users":"المستخدمين",
+  "ShowRequests":"عرض الطلبات",
+  "DisplayCurrentManufacturingOutput":"عرض خرج قسم التصنيع الحالي",
+  "DisplayManufacturingInput":"عرض دخل قسم التصنيع",
+  "DisplayManufacturingOutputs": "عرض خرج فسم التصنيع",
+  "DisplayTotalManufacturingInput": "عرض كامل دخل التصنيع",
   "DisplayTrips": "عرض الرحلات",
   "DisplayOrderPurches": "عرض أوامر الشراء",
   "DisplayCurrentOutput": "مخرجات التقطيع الحالية",

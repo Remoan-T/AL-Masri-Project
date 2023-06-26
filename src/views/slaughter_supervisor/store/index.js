@@ -20,7 +20,7 @@ export const getSlaughterInput = createAsyncThunk('slaughter/getSlaughterInput',
 
 
 export const getAllSlaughterData = createAsyncThunk('slaughter/getAllSlaughterData', async () => {
-    const response = await axios.get('http://127.0.0.1:8000/slaughter-supervisor-api/display-output-slaughter', {
+    const response = await axios.get('http://127.0.0.1:8000/api/display-output-slaughter', {
         headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${localStorage.accessToken}`

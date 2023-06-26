@@ -44,11 +44,7 @@ const DataTablesBasic = () => {
       selector: (row, index) => index + 1,
       sortable: false,
     },
-    {
-      name: "المعرف",
-      selector: (row) => row.id,
-    },
-
+ 
     {
       name: "الاسم",
       selector: (row) => row.name,
@@ -198,6 +194,7 @@ const DataTablesBasic = () => {
             المزارع المتاحة
             <br />
             <br />
+            </h2>
             <h3 className="text-success">
               {store.AvailableFarms == ""
                 ? null
@@ -206,8 +203,8 @@ const DataTablesBasic = () => {
                       ? filteredData.length
                       : store.AvailableFarms.length
                   }`}
-            </h3>
-          </h2>{" "}
+            </h3>{" "}
+          
         </CardTitle>
         <div className="d-flex mt-md-0 mt-1">
           <UncontrolledButtonDropdown>

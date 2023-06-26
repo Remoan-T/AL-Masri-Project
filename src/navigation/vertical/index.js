@@ -14,6 +14,13 @@ import trips from './trips'
 import statment from './Statments'
 import slaughter_supervisor from "./slaughter_supervisor"
 import cutting_supervisor from './cutting_supervisor'
+import Manufacturing_Supervisor from './Manufacturing_Supervisor'
+import CEO from './ceo'
 import Warehouse from './Warehouse'
+import friges from './friges'
+import uStore from './ultimate store'
+import production from './production'
+
+
 // ** Merge & Export
-export default [...dashboards, ...Farms, ...statment, ...slaughter_supervisor, ...Warehouse, ...cutting_supervisor, ...SellingPort, ...notes, ...order, ...driver, ...trucks, ...trips, ...forms, ...tables, ...charts, ...others]
+export default [...dashboards, ...Farms, ...statment, ...slaughter_supervisor, ...production, ...Warehouse, ...uStore, ...friges, ...cutting_supervisor, ...SellingPort, ...notes, ...order, ...driver, ...trucks, ...trips, ...forms, ...tables, ...charts, ...others, ...Manufacturing_Supervisor, ...CEO]

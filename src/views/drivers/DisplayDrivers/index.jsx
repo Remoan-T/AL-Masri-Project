@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getDriversData, removeDriver } from "../store";
 import { useEffect, useState } from "react";
 // ** Third Party Components
-import { ChevronDown, Share, Grid,Search } from "react-feather";
+import { ChevronDown, Share, Grid, Search } from "react-feather";
 import DataTable from "react-data-table-component";
 import { Trash2 } from "react-feather";
 
@@ -42,7 +42,7 @@ const DataTablesBasic = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showNoDataMessage, setShowNoDataMessage] = useState(false);
-  
+
 
   const handleExport = () => {
     const fileType =
@@ -111,6 +111,10 @@ const DataTablesBasic = () => {
       selector: (row) => row.mobile_number,
     },
     {
+      name: "الحالة",
+      selector: (row) => row.state,
+    },
+    {
       name: "",
       cell: (row) => (
         // <button  onClick={() => handleConfirmText(row.id)} className='btn-sm btn btn-danger'>
@@ -123,6 +127,13 @@ const DataTablesBasic = () => {
         />
       ),
     },
+    // {
+    //   name: "",
+    //   cell: (row) => (
+
+    //     <button className='btn-sm btn btn-success' onClick={() => handleConfirmText(row.id)}>تعديل حالة السائق</button>
+    //   ),
+    // },
   ];
   const store = useSelector((state) => state.driver);
 
@@ -176,21 +187,20 @@ const DataTablesBasic = () => {
     });
   };
   const hasData = searchValue.length
-  ? filteredData.length > 0
-  : store.data.length > 0;
+    ? filteredData.length > 0
+    : store.data.length > 0;
 
   return (
     <Card className="overflow-hidden">
       <CardHeader>
-      <CardTitle >
+        <CardTitle >
           {" "}
-          <h2>السائقين المتاحين<br/><br/><h3 className="text-success">{store.data == ""
-                ? null
-                : `عدد السائقين : ${
-                    searchValue.length
-                      ? filteredData.length
-                      : store.data.length
-                  }`}</h3></h2>{" "}
+          <h2>السائقين المتاحين<br /><br /><h3 className="text-success">{store.data == ""
+            ? null
+            : `عدد السائقين : ${searchValue.length
+              ? filteredData.length
+              : store.data.length
+            }`}</h3></h2>{" "}
         </CardTitle>
         <div className="d-flex mt-md-0 mt-1">
           <UncontrolledButtonDropdown>
@@ -208,11 +218,11 @@ const DataTablesBasic = () => {
         </div>
       </CardHeader>
       <Row className="justify-content-end mx-0">
-      <InputGroup className='mb-2'>
-        <InputGroupText>
-          <Search size={14} />
-        </InputGroupText>
-        <Input
+        <InputGroup className='mb-2'>
+          <InputGroupText>
+            <Search size={14} />
+          </InputGroupText>
+          <Input
             className="dataTable-filter"
             type="text"
             onChange={handleFilter}
@@ -220,8 +230,8 @@ const DataTablesBasic = () => {
             value={searchValue}
             disabled={store.data == ''}
             placeholder="البحث ..."
-          /> 
-      </InputGroup>
+          />
+        </InputGroup>
       </Row>
       {isLoading ? ( // Show the loading spinner while isLoading is true
         <div className="text-center my-3">
@@ -230,17 +240,17 @@ const DataTablesBasic = () => {
           </div>
         </div>
       ) : hasData ? (
-      <div className="react-dataTable">
-        <DataTable
-          noHeader
-          pagination
-          data={searchValue.length ? filteredData : store.data}
-          columns={columns}
-          className="react-dataTable"
-          sortIcon={<ChevronDown size={10} />}
-          paginationRowsPerPageOptions={[10, 25, 50, 100]}
-        />
-      </div>
+        <div className="react-dataTable">
+          <DataTable
+            noHeader
+            pagination
+            data={searchValue.length ? filteredData : store.data}
+            columns={columns}
+            className="react-dataTable"
+            sortIcon={<ChevronDown size={10} />}
+            paginationRowsPerPageOptions={[10, 25, 50, 100]}
+          />
+        </div>
       ) : showNoDataMessage ? (
         <div className="text-center my-3 text-danger h3">لا توجد بيانات</div>
       ) : null}

@@ -50,12 +50,6 @@ const DataTablesBasic = () => {
         {
             name: '#', selector: (row, index) => index + 1, sortable: false
         },
-        {
-
-            name: 'المعرف',
-            selector: row => row.id
-
-        },
 
         {
             name: 'اسم المزرعة',
@@ -84,9 +78,9 @@ const DataTablesBasic = () => {
             name: '',
             selector: row => {
                 if (row.is_weighted_after_arrive === 1)
-                    return (<a href={`/statements/DisplaySpecificStatement/${row.id}`}>استعراض كشف</a>)
+                    return (<a href={`/statements/DisplaySpecificStatement/${row.id}`}>استعراض وزن الشخنة</a>)
                 if (row.is_weighted_after_arrive === 0)
-                    return (<a href={`/statements/AddReceiptStatement/${row.id}`}>اضافة كشف</a>)
+                    return (<a href={`/statements/AddShipmentWeight/${row.id}`}>اضافة وزن الشحنة</a>)
 
             }
 
@@ -103,6 +97,31 @@ const DataTablesBasic = () => {
         dispatch(getStatements())
     }, [dispatch, store.data.length])
 
+    const columns2 = [
+        {
+            name: "عدد الطيور",
+            selector: (row) => row.num_birds,
+        },
+        {
+            name: "عدد الاقفاص",
+            selector: (row) => row.num_birds,
+        },
+        {
+            name: "الوزن الكلي",
+            selector: (row) => row.tot_weight
+            ,
+        },
+    ];
+    const ExpandedComponent = ({ data }) => (
+        <div>
+            <DataTable
+                data={data.poultry_receipt_detection_details}
+                columns={columns2}
+                className="react-dataTable"
+                noHeader
+            />
+        </div>
+    );
 
 
 
@@ -111,16 +130,20 @@ const DataTablesBasic = () => {
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
         const fileExtension = ".xlsx";
         const fileName = "الكشوف المتوفرة";
-        const formattedData = store.AvailableFarms.map(
-            ({ id, name, location, mobile_number, owner }) => ({
-                المعرف: id,
-                الاسم: name,
-                العنوان: location,
-                الهاتف: mobile_number,
-                المالك: owner,
+        const formattedData = store.data.map(
+            ({ farm,
+                tot_weight,
+                net_weight,
+                num_cages,
+                updated_at }) => ({
+                    اسم_المزرعة: farm.name,
+                    الوزن_الكلي: tot_weight,
+                    الوزن_الصاقي: net_weight,
+                    عدد_الأقفاص: num_cages,
+                    التاريخ: updated_at,
 
 
-            })
+                })
         );
         const ws = XLSX.utils.json_to_sheet(formattedData);
         const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
@@ -137,20 +160,22 @@ const DataTablesBasic = () => {
         setSearchValue(value);
 
         if (value.length) {
-            updatedData = store.AvailableFarms.filter((item) => {
+            updatedData = store.data.filter((item) => {
                 const startsWith =
-                    item.name.toLowerCase().startsWith(value.toLowerCase()) ||
-                    item.location.toLowerCase().startsWith(value.toLowerCase()) ||
-                    item.mobile_number.toString().startsWith(value) ||
-                    item.owner.toLowerCase().startsWith(value.toLowerCase())
+                    item.farm.name.toLowerCase().startsWith(value.toLowerCase()) ||
+                    item.tot_weight.toString().startsWith(value) ||
+                    item.net_weight.toString().startsWith(value) ||
+                    item.num_cages.toString().startsWith(value) ||
+                    item.updated_at.toString().startsWith(value)
 
 
 
                 const includes =
-                    item.name.toLowerCase().includes(value.toLowerCase()) ||
-                    item.location.toLowerCase().includes(value.toLowerCase()) ||
-                    item.mobile_number.toString().includes(value) ||
-                    item.owner.toLowerCase().includes(value.toLowerCase())
+                    item.farm.name.toLowerCase().includes(value.toLowerCase()) ||
+                    item.tot_weight.toString().includes(value) ||
+                    item.net_weight.toString().includes(value) ||
+                    item.num_cages.toString().includes(value) ||
+                    item.updated_at.toString().includes(value)
 
                 if (startsWith) {
                     return startsWith;
@@ -221,6 +246,11 @@ const DataTablesBasic = () => {
                     className='react-dataTable'
                     keyField='string'
                     sortIcon={<ChevronDown size={10} />}
+                    expandableRows={true}
+                    expandableRowsComponent={ExpandedComponent}
+                    expandOnRowClicked={false}
+                    expandOnRowDoubleClicked={false}
+                    expandableRowsHideExpander={false}
                     paginationRowsPerPageOptions={[10, 25, 50, 100]}
                 />
             </div>

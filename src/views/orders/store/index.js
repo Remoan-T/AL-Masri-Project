@@ -1,9 +1,28 @@
 // ** Redux Imports
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import toast from 'react-hot-toast'
+import ToastDone from '@src/assets/toast/toastDone.component'
+import ToastError from '@src/assets/toast/toastError.component'
 
 // ** Axios Imports
 import axios from 'axios'
+export const Acceptorder = createAsyncThunk('appselling/Acceptorder', async id => {
+    const res = await axios.post(`http://127.0.0.1:8000/sales-api/command-for-mechanism/${id}`, {
+        headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${localStorage.accessToken}`
 
+        }
+    })
+    if (res.data.status == true)
+    toast(t => (
+      <ToastDone position="top-right" t={t} msg={res.data.message} />
+    ))
+    if (res.data.status == false) toast(t => (
+        <ToastError t={t} err={res.data.msg} />
+      ))
+    return response.data
+})
 export const getUnacceptableOrder = createAsyncThunk('appselling/getUnacceptableOrder', async () => {
     const response = await axios.get('http://127.0.0.1:8000/sales-api/display-non-accept', {
         headers: {
@@ -68,7 +87,7 @@ export const getSellingPort = createAsyncThunk('appselling/getSellingPort', asyn
 
         }
     })
-  
+
     return {
         SellingPort: response.data
     }
@@ -153,7 +172,7 @@ export const appSellingSlice = createSlice({
         })
         builder.addCase(getRowMaterials.fulfilled, (state, action) => {
             state.buyMaterials = action.payload.buyMaterials
-          
+
         })
         builder.addCase(getProducts.fulfilled, (state, action) => {
             state.Products = action.payload.Products

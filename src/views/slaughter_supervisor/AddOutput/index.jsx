@@ -74,13 +74,23 @@ function DynamicFields() {
         }
       );
       
-      if(!res.data.errNum)
+      if(res.data.status == true)
       toast(t => (
         <ToastDone position="top-right" t={t} msg={res.data.message} />
       ))
+      if(res.data.status == false)
+      toast(t => (
+        <ToastError position="top-right" t={t} err={res.data.msg} />
+      ))
 
-      console.log(res);
+      // console.log(res);
     } catch (error) {
+      if (error.code == 'ERR_NETWORK') toast(t => (
+        <ToastError t={t} err={'  مشكلة بالاتصال بقاعدة البيانات !!'} />
+      ))
+      if (error.code == 'ERR_BAD_REQUEST') toast(t => (
+        <ToastError t={t} err={'الرجاء ملئ كامل البيانات بشكل صحيح !!'} />
+      ))
       console.log(error);
     }
 
@@ -89,7 +99,7 @@ function DynamicFields() {
   };
 
   return (
-    <div>
+    <div className="pt-4">
       <Card className="mx-5 px-2">
         <CardBody>
           <Form onSubmit={handleSubmit(onSubmit)}>
@@ -98,7 +108,7 @@ function DynamicFields() {
             <div className="divider">
               <div className="divider-text">
                 <b className="text-primary h1">
-                طلب ovh
+                إضافة خرج
                 </b>
               </div>
             </div>

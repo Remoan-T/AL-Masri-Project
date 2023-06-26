@@ -1,5 +1,8 @@
 // ** Redux Imports
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import toast from 'react-hot-toast'
+import ToastDone from '@src/assets/toast/toastDone.component'
+import ToastError from '@src/assets/toast/toastError.component'
 
 // ** Axios Imports
 import axios from 'axios'
@@ -65,13 +68,16 @@ export const getSellingPortOffer = createAsyncThunk('appselling/getSellingPortOf
 })
 ////////////////////////////////////////////////REMOVE pORT/////////////////////////
 export const removePort = createAsyncThunk('appselling/removePort', async id => {
-    await axios.delete(`http://127.0.0.1:8000/sales-api/soft-delete-selling-port/${id}`, {
+    const response = await axios.delete(`http://127.0.0.1:8000/sales-api/soft-delete-selling-port/${id}`, {
         headers: {
             Accept: 'application/json',
             Authorization: `Bearer ${localStorage.accessToken}`
 
         }
     })
+    if (response.data.status == false) toast(t => (
+        <ToastError t={t} err={response.data.msg} />
+      ))
     return response.data
 })
 ////////////////////////////////////////////////Accept Port/////////////////////////
@@ -108,25 +114,19 @@ export const appSellingSlice = createSlice({
     extraReducers: builder => {
         builder.addCase(getSellingReqData.fulfilled, (state, action) => {
             state.data = action.payload.data
-            console.log(state.data)
-            //   state.params = action.payload.params
+
         })
         builder.addCase(getDeletedSelling.fulfilled, (state, action) => {
             state.deletedSelling = action.payload.deletedSelling
-            console.log(state.deletedSelling)
-            //   state.params = action.payload.params
+
         })
         builder.addCase(getSellingPort.fulfilled, (state, action) => {
             state.SellingPort = action.payload.SellingPort
-            console.log("🚀 ~ file: index.js:78 ~ builder.addCase ~ action.payload.data:", action.payload.SellingPort)
-            console.log(state.SellingPort)
-            //   state.params = action.payload.params
+ 
         })
         builder.addCase(getSellingPortOffer.fulfilled, (state, action) => {
             state.SellingPortOffer = action.payload.SellingPortOffer
-            console.log("🚀 ~ file: index.js:78 ~ builder.addCase ~ action.payload.data:", action.payload.SellingPortOffer)
-            console.log(state.SellingPortOffer)
-            //   state.params = action.payload.params
+
         })
         .addCase(AcceptPort.fulfilled, (state, action) => {
             state.status = 'succeeded';

@@ -14,12 +14,12 @@ const Error = () => {
   // ** Hooks
   const { skin } = useSkin()
 
-  const illustration = skin === 'dark' ? 'error-dark.svg' : 'error.svg',
-    source = require(`@src/assets/images/pages/${illustration}`).default
+  // const illustration = skin === 'dark' ? 'error-dark.svg' : 'error.svg'
+   const source = require(`@src/assets/images/pages/notFound.png`).default
   return (
     <div className='misc-wrapper'>
       <a className='brand-logo' href='/'>
-        <svg viewBox='0 0 139 95' version='1.1' height='28'>
+        {/* <svg viewBox='0 0 139 95' version='1.1' height='28'>
           <defs>
             <linearGradient x1='100%' y1='10.5120544%' x2='50%' y2='89.4879456%' id='linearGradient-1'>
               <stop stopColor='#000000' offset='0%'></stop>
@@ -66,18 +66,19 @@ const Error = () => {
               </g>
             </g>
           </g>
-        </svg>
-        <h2 className='brand-text text-primary ms-1'>Vuexy</h2>
+        </svg> */}
+        {/* <h2 className='brand-text text-primary ms-1'>المصري</h2> */}
       </a>
       <div className='misc-inner p-2 p-sm-3'>
         <div className='w-100 text-center'>
-          <h2 className='mb-1'>Page Not Found 🕵🏻‍♀️</h2>
-          <p className='mb-2'>Oops! 😖 The requested URL was not found on this server.</p>
+          <h2 className='mb-1'> الصفحة غير موجودة 👀</h2>
+          <p className='mb-2'>عذراً! 😖 الرابط المطلوب غير موجود على السيرفر.</p>
           <Button tag={Link} to='/' color='primary' className='btn-sm-block mb-2'>
-            Back to home
+            الرجوع للصفحة الرئيسية
           </Button>
-          <img className='img-fluid' src={source} alt='Not authorized page' />
+          
         </div>
+        <img className='img-fluid px-2' src={source} alt='Not authorized page' style={{pointerEvents: 'none'}}/>
       </div>
     </div>
   )

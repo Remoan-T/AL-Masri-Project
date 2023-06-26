@@ -43,23 +43,23 @@ const NavbarBookmarks = props => {
 
   // ** Loops through Bookmarks Array to return Bookmarks
   const renderBookmarks = () => {
-    if (store.bookmarks.length) {
-      return store.bookmarks
-        .map(item => {
-          const IconTag = Icon[item.icon]
-          return (
-            <NavItem key={item.target} className='d-none d-lg-block'>
-              <NavLink tag={Link} to={item.link} id={item.target}>
-                <IconTag className='ficon' />
-                <UncontrolledTooltip target={item.target}>{item.title}</UncontrolledTooltip>
-              </NavLink>
-            </NavItem>
-          )
-        })
-        .slice(0, 10)
-    } else {
-      return null
-    }
+    // if (store.bookmarks.length) {
+    //   return store.bookmarks
+    //     .map(item => {
+    //       const IconTag = Icon[item.icon]
+    //       return (
+    //         <NavItem key={item.target} className='d-none d-lg-block'>
+    //           <NavLink tag={Link} to={item.link} id={item.target}>
+    //             <IconTag className='ficon' />
+    //             <UncontrolledTooltip target={item.target}>{item.title}</UncontrolledTooltip>
+    //           </NavLink>
+    //         </NavItem>
+    //       )
+    //     })
+    //     .slice(0, 10)
+    // } else {
+    //   return null
+    // }
   }
 
   // ** If user has more than 10 bookmarks then add the extra Bookmarks to a dropdown
@@ -152,9 +152,9 @@ const NavbarBookmarks = props => {
         {renderBookmarks()}
         {renderExtraBookmarksDropdown()}
         <NavItem className='nav-item d-none d-lg-block'>
-          <NavLink className='bookmark-star' onClick={handleBookmarkVisibility}>
+          {/* <NavLink className='bookmark-star' onClick={handleBookmarkVisibility}>
             <Icon.Star className='ficon text-warning' />
-          </NavLink>
+          </NavLink> */}
           <div className={classnames('bookmark-input search-input', { show: openSearch })}>
             <div className='bookmark-input-icon'>
               <Icon.Search size={14} />

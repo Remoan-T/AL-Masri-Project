@@ -153,12 +153,12 @@ const NotificationDropdown = () => {
 
   return (
     <UncontrolledDropdown tag='li' className='dropdown-notification nav-item me-25'>
-      <DropdownToggle tag='a' className='nav-link' href='/' onClick={e => e.preventDefault()}>
+      {/* <DropdownToggle tag='a' className='nav-link' href='/' onClick={e => e.preventDefault()}>
         <Bell size={21} />
         <Badge pill color='danger' className='badge-up'>
           5
         </Badge>
-      </DropdownToggle>
+      </DropdownToggle> */}
       <DropdownMenu end tag='ul' className='dropdown-menu-media mt-0'>
         <li className='dropdown-menu-header'>
           <DropdownItem className='d-flex' tag='div' header>

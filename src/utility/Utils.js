@@ -71,6 +71,9 @@ export const getHomeRouteForLoggedInUser = userRole => {
   if (userRole === 'slaughter_supervisor') return '/access-control'
   if (userRole === 'cutting_supervisor') return '/access-control'
   if (userRole === 'warehouse_supervisor') return '/access-control'
+  if (userRole === 'Manufacturing_Supervisor') return '/access-control'
+  if (userRole === 'ceo') return '/access-control'
+  if (userRole === 'Production_Manager') return '/access-control'
 
   return '/login'
 }

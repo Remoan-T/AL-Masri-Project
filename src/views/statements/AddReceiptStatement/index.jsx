@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 import axios from "axios";
 import { useParams } from 'react-router-dom'
-
+import './style.css'
 function MyForm() {
     const { id } = useParams()
     console.log(id)
@@ -95,13 +95,14 @@ function MyForm() {
 
                         <Col md={4} className="mt-2 mr-10">
                             <Button
+
                                 color="danger"
-                                className="text-nowrap px-1 mr-10"
+                                className="text-nowrap px-1 mr-10 cell"
                                 type="button"
                                 onClick={() => remove(k)}
                                 outline
                             >
-                                <X size={14} className="me-50" />
+                                <X size={14} />
                                 <span>حذف سطر</span>
                             </Button>
                         </Col>
@@ -110,6 +111,7 @@ function MyForm() {
             ))}
             <Button
                 type="button"
+                color='primary'
                 onClick={() =>
                     append(
                         { row_material_id: "", detection_details: [] },
@@ -117,9 +119,14 @@ function MyForm() {
                     )
                 }
             >
-                Add Row
+                اضافة سطر
             </Button>
-            <Button type="submit">Submit</Button>
+            <br />
+            <br />
+            <br />
+            <Button className='btn-md w-75 ' color='primary' type='submit' >
+                إضافة
+            </Button>
         </Form>
     );
 }

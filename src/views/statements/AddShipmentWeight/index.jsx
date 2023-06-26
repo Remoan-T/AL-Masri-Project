@@ -59,7 +59,7 @@ const VerticalFormIcons = () => {
                     Authorization: `Bearer ${localStorage.accessToken}`
                 }
             })
-            toast(t => (
+            if(res.data.status == true) toast(t => (
                 <ToastDone position="top-right" t={t} msg={'تم إضافة الحمولة !!'} />
             ))
 

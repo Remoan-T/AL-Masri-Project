@@ -14,6 +14,9 @@ import { selectThemeColors } from "@utils";
 import "@styles/react/libs/react-select/_react-select.scss";
 import { selectStyles } from "../../../assets/react-select/scrollbar.styles";
 import { customNoOptionsMessage } from "../../../assets/react-select/react-selectMod";
+import toast from 'react-hot-toast'
+import ToastDone from '@src/assets/toast/toastDone.component'
+import ToastError from '@src/assets/toast/toastError.component'
 
 
 // ** Reactstrap Imports
@@ -43,7 +46,6 @@ const DataTablesBasic = () => {
           const handleCheckboxChange = (event) => {
             const { value, checked } = event.target;
             setCheck(!check)
-      
             setRowEnabledState((prevState) => ({
               ...prevState,
               [value]: checked,
@@ -53,7 +55,7 @@ const DataTablesBasic = () => {
           return (
             <Input
               type="checkbox"
-              value={row.type_id}
+              value={row.id}
               onChange={handleCheckboxChange}
               
              
@@ -67,15 +69,15 @@ const DataTablesBasic = () => {
       sortable: false,
     },
     {
-      name: "الوزن",
-      selector: (row) => row.weight,
+      name: "النوع",
+      selector: (row) => row.output_types.type,
       sortable: false,
     },
     {
-        name: "النوع",
-        selector: (row) => row.output_types.type,
-        sortable: false,
-      },
+      name: "الوزن",
+      selector: (row) => `${row.weight} كغ`,
+      sortable: false,
+    },
     
        {
       name: "تاريخ الإضافة",
@@ -85,12 +87,12 @@ const DataTablesBasic = () => {
     {
         name: "الوزن المطلوب",
         cell: (row) => {
-          const isEnabled = rowEnabledState[row.type_id];
-          const typeId = row.type_id;
+          const isEnabled = rowEnabledState[row.id];
+          const typeId = row.id;
     
           const handleInputChange = (event, typeId) => {
-            const { value } = event.target;
-          
+            const { value } = event.target;  
+            setInputValue(value.toString().length)       
             setWeightValues((prevWeightValues) => ({
               ...prevWeightValues,
               [typeId]: value,
@@ -104,7 +106,12 @@ const DataTablesBasic = () => {
               value={weightValues[typeId] || ""}
               onChange={(event) => handleInputChange(event, typeId)}
               style={{border: 'none',
-              outline: 'none'}}
+              }}
+              placeholder="ادخل الوزن المطلوب"
+              styles={{'::placeholder': { /* Chrome, Firefox, Opera, Safari 10.1+ */
+              color: 'red',
+              opacity: '1' /* Firefox */
+            }}}
             />
           );
         },
@@ -120,21 +127,17 @@ const DataTablesBasic = () => {
     const fileType =
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
     const fileExtension = ".xlsx";
-    const fileName = "الطلبات غير المقبولة";
-    const formattedData = store.SellingPortOffer.map(
+    const fileName = "مخرجات التقطيع الحالية";
+    const formattedData = store.currentOutput.map(
       ({
-        request_type,
-        farm,
-        selling_port,
-        reason_refuse,
-        total_amount,
+        weight,
+        output_types,
         created_at,
       }) => ({
-        نوع_الطلب: request_type == 1 ? "طلب مبيع" : "طلب شراء",
-        صاحب_الطلب: farm ? farm.name : selling_port.name,
-        سبب_عدم_القبول: reason_refuse,
-        تاريخ_إنشاء_الطلب: created_at,
-        الكمية_الكلية: total_amount,
+        النوع: output_types.type,
+        الوزن: `${weight} كغ`,
+        التاريخ: created_at,
+       
       })
     );
     const ws = XLSX.utils.json_to_sheet(formattedData);
@@ -150,24 +153,22 @@ const DataTablesBasic = () => {
     setSearchValue(value);
 
     if (value.length) {
-      updatedData = store.SellingPortOffer.filter((item) => {
-        const startsWithPort =
-          item.selling_port &&
-          item.selling_port.name.toLowerCase().startsWith(value.toLowerCase());
-        const includesPort =
-          item.selling_port &&
-          item.selling_port.name.toLowerCase().includes(value.toLowerCase());
+      updatedData = store.currentOutput.filter((item) => {
+        const startsWith =
+          item.output_types.type.toLowerCase().startsWith(value.toLowerCase()) ||
+          item.weight.toString().startsWith(value)
 
-        const otherStart = item.total_amount.toString().startsWith(value);
-        const otherIncludes = item.total_amount.toString().includes(value);
+        const includes =
+        item.output_types.type.toLowerCase().includes(value.toLowerCase()) ||
+        item.weight.toString().includes(value)
 
-        if (startsWithPort || includesPort || otherStart || otherIncludes) {
-          return true;
-        } else {
-          return false;
-        }
+        if (startsWith) {
+          return startsWith;
+        } else if (!startsWith && includes) {
+          return includes;
+        } else return null;
       });
-      setsearchData(updatedData);
+      setFilteredData(updatedData);
       setSearchValue(value);
     }
   };
@@ -175,13 +176,16 @@ const DataTablesBasic = () => {
   const store = useSelector((state) => state.cutting);
 
   const [searchValue, setSearchValue] = useState("");
-  const [searchData, setSearchData] = useState([]);
+  // const [searchData, setSearchData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showNoDataMessage, setShowNoDataMessage] = useState(false);
   const [rowEnabledState, setRowEnabledState] = useState({});
   const [weightValues, setWeightValues] = useState({});
   const [check, setCheck] = useState(false);
   const [outputChoice, setOutputChoice] = useState(null);
+  const [inputValue, setInputValue] = useState(0);
+  const [filteredData, setFilteredData] = useState([]);
+  
   
 
   
@@ -217,7 +221,7 @@ const DataTablesBasic = () => {
   }, [isLoading, hasData]);
 
   const hasData = searchValue.length
-    ? searchData.length > 0
+    ? filteredData.length > 0
     : store.currentOutput.length > 0;
 
 
@@ -249,12 +253,28 @@ const DataTablesBasic = () => {
           .post("http://127.0.0.1:8000/cutting-supervisor-api/direct-cutting-to", requestBody)
           .then((response) => {
             // Handle success response
-            console.log("POST request successful:", response.data);
+            // console.log("POST request successful:", response.data);
+            if(response.data.status == true)
+            toast(t => (
+              <ToastDone position="top-right" t={t} msg={response.data.message} />
+            ))
+
+            if(response.data.status == false)
+            toast(t => (
+              <ToastError position="top-right" t={t} err={response.data.message} />
+            ))
           })
           .catch((error) => {
             // Handle error
+            if (error.code == 'ERR_NETWORK') toast(t => (
+              <ToastError t={t} err={'  مشكلة بالاتصال بقاعدة البيانات !!'} />
+            ))
+            if (error.code == 'ERR_BAD_REQUEST') toast(t => (
+              <ToastError t={t} err={'الرجاء ملئ كامل البيانات بشكل صحيح !!'} />
+            ))
             console.log("Error in POST request:", error);
           });
+          dispatch(getCurrentOutput());
       };
 
 
@@ -265,16 +285,16 @@ const DataTablesBasic = () => {
         <CardTitle>
           {" "}
           <h2>
-            مخرجات قسم التقطيع
+             مخرجات التقطيع الحالية
             <br />
             <br />
             <h3 className="text-success">
               {" "}
               {store.currentOutput == ""
                 ? null
-                : `عدد المخرجات : ${
-                    searchValue.length
-                      ? searchData.length
+                : ` عدد المخرجات الحالية : ${
+                  searchValue.length
+                  ? filteredData.length
                       : store.currentOutput.length
                   }`}
             </h3>
@@ -327,7 +347,7 @@ const DataTablesBasic = () => {
                           className="react-select w-25 mr-2"
                           isClearable
                           noOptionsMessage={customNoOptionsMessage}
-                          isDisabled={!check}
+                          // isDisabled={!check}
                           options={store.cuttingDropdown.map((option) => ({
                             value: option.to,
                             label: option.to,
@@ -349,7 +369,7 @@ const DataTablesBasic = () => {
           <DataTable
             noHeader
             pagination
-            data={searchValue.length ? searchData : store.currentOutput}
+            data={searchValue.length ? filteredData : store.currentOutput}
             columns={columns}
             className="react-dataTable"
             paginationRowsPerPageOptions={[10, 25, 50, 100]}
@@ -359,7 +379,7 @@ const DataTablesBasic = () => {
         
           <button className="btn btn-primary position-absolute bottom-0 end-0 mb-2 w-25"
           onClick={handleButtonClicked}
-          disabled={!check || !outputChoice}
+          disabled={!inputValue || !outputChoice}
           >إرسال</button>
           </div>
         

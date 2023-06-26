@@ -28,7 +28,7 @@ const cuttingRoutes = [
         element: <DisplayCuttingOutputs />,
         meta: {
             action: 'read',
-            resource: 'cs'
+            resource: ['cs', 'CEO', 'pm']
         }
     },
     {

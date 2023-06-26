@@ -1,6 +1,6 @@
 // ** Table Columns
 import { useDispatch, useSelector } from "react-redux";
-import { getWarehouseWithDetails } from "../store";
+import { getdisplaycommands } from "../store";
 import { useEffect, useState } from "react";
 // ** Third Party Components
 import { Share, Grid, Search } from "react-feather";
@@ -54,34 +54,18 @@ const DataTablesBasic = () => {
         },
 
         {
-            name: "المادة",
-            selector: (row) => row.out_put__type__production.type,
-        },
-
-        {
-            name: "الوزن الكلي",
-            selector: (row) => row.tot_weight,
+            name: "تاريخ الامر",
+            selector: (row) => row.created_at,
         },
         {
-            name: "الحد الادنى",
-            selector: (row) => row.minimum,
+            name: "حالة الامر",
+            selector: row => {
+                if (row.done === 0)
+                    return (<a href={`/Warehouse/AddOrder/${row.id}`}>ملء أمر أنتاج</a>)
+                if (row.done === 1)
+                    return <div className="text-danger">تم ملء الامر </div>
+            }
         },
-        {
-            name: "المخزون الاحتياطي",
-            selector: (row) => row.stockpile,
-        },
-        {
-            name: '',
-            cell: row => (
-                // <button  onClick={() => handleConfirmText(row.id)} className='btn-sm btn btn-danger'>
-                //   حذف المزرعة
-                // </button>
-                <div>
-
-                    <a href={`/statements/AddReceiptStatement/${row.id}`}>تعديل </a>
-                </div>
-            )
-        }
         // {
         //   name: "الكمية الكلية",
         //   selector: (row) => row.total_amount,
@@ -89,13 +73,22 @@ const DataTablesBasic = () => {
     ];
     const columns2 = [
         {
-            name: "البراد الصفري",
-            selector: (row) => row.zero_frige.weight,
+            name: "المادة",
+            selector: (row) => row.warehouse.out_put__type__production.type,
         },
         {
-            name: "البحرات",
-            selector: (row) => row.lake.weight,
+            name: "الوزن المطلوب",
+            selector: (row) => row.command_weight,
         },
+        {
+            name: " توجيه الى",
+            selector: (row) => row.to,
+        },
+        {
+            name: "الوزن الحالي",
+            selector: (row) => row.cur_weight,
+        },
+
 
     ];
 
@@ -163,10 +156,11 @@ const DataTablesBasic = () => {
     const [showNoDataMessage, setShowNoDataMessage] = useState(false);
 
     const ExpandedComponent = ({ data }) => (
+
         <div>
             <DataTable
                 customStyles={customStyles}
-                data={store.warehouseDetails}
+                data={data.command_details}
                 columns={columns2}
                 className="react-dataTable"
                 noHeader
@@ -175,8 +169,8 @@ const DataTablesBasic = () => {
     );
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(getWarehouseWithDetails());
-    }, [dispatch, store.warehouseDetails.length]);
+        dispatch(getdisplaycommands());
+    }, [dispatch, store.displaycommands.length]);
 
     useEffect(() => {
         const delay = 500;
@@ -187,7 +181,7 @@ const DataTablesBasic = () => {
         return () => {
             clearTimeout(timer);
         };
-    }, [store.cuttingOutput]);
+    }, [store.displaycommands]);
 
     useEffect(() => {
         const delay = 1600;
@@ -204,7 +198,7 @@ const DataTablesBasic = () => {
 
     const hasData = searchValue.length
         ? searchData.length > 0
-        : store.warehouseDetails.length > 0;
+        : store.displaycommands.length > 0;
 
     return (
         <Card className="overflow-hidden">
@@ -212,22 +206,22 @@ const DataTablesBasic = () => {
                 <CardTitle>
                     {" "}
                     <h2>
-                        مخرجات قسم التقطيع
+                        الاوامر والطلبات
                         <br />
                         <br />
                         <h3 className="text-success">
                             {" "}
                             {store.cuttingOutput == ""
                                 ? null
-                                : `عدد المخرجات : ${searchValue.length
+                                : `عدد الاوامر : ${searchValue.length
                                     ? searchData.length
-                                    : store.cuttingOutput.length
+                                    : store.displaycommands.length
                                 }`}
                         </h3>
                     </h2>{" "}
                 </CardTitle>
 
-                <div className="d-flex mt-md-0 mt-1">
+                {/* <div className="d-flex mt-md-0 mt-1">
                     <UncontrolledButtonDropdown>
                         <DropdownToggle
                             color="secondary"
@@ -245,9 +239,9 @@ const DataTablesBasic = () => {
                             </DropdownItem>
                         </DropdownMenu>
                     </UncontrolledButtonDropdown>
-                </div>
+                </div> */}
             </CardHeader>
-            <Row className="justify-content-end mx-0">
+            {/* <Row className="justify-content-end mx-0">
                 <InputGroup className="mb-2">
                     <InputGroupText>
                         <Search size={14} />
@@ -262,7 +256,7 @@ const DataTablesBasic = () => {
                         placeholder="البحث ..."
                     />
                 </InputGroup>
-            </Row>
+            </Row> */}
             {isLoading ? ( // Show the loading spinner while isLoading is true
                 <div className="text-center my-3">
                     <div className="spinner-border text-primary" role="status">
@@ -274,7 +268,7 @@ const DataTablesBasic = () => {
                     <DataTable
                         noHeader
                         pagination
-                        data={searchValue.length ? searchData : store.warehouseDetails}
+                        data={searchValue.length ? searchData : store.displaycommands}
                         columns={columns}
                         className="react-dataTable"
                         expandableRows={true}
